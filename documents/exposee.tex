@@ -1,0 +1,369 @@
+\documentclass[a4paper,12pt]{article} 
+
+%Das Paket wird für die anderthalb-zeiligen Zeilenabstand benötigt
+\usepackage{setspace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                                  %%
+%% HTWM-Vorlage - benoetigt folgende Pakete:                                        %%
+%% apt-get install texworks texlive-fonts-extra kile kile-l10n aspell-de texlive-lang-german  %%
+%%                                                                                  %%
+%% empfohlener Editor: TexWorks                                                     %%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{tocdepth}{3}			%Schatelungstiefe Inhaltsverz.
+\usepackage[utf8]{inputenc}			%deutsche Umlaute
+\usepackage{german, ngerman}
+\usepackage[ngerman]{babel}			%Rechtschreibprüfung
+\usepackage{color,listings} 			%Quellcode Highlighting, bindet das
+%Paket Listings ein
+\usepackage{listings}
+\usepackage{pdflscape}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage[T1]{fontenc}			%srccode
+\usepackage[scaled]{beramono}			%srccode
+\usepackage{longtable}				%mehrseitige Tabellen
+\usepackage[tableposition=b]{caption}
+\usepackage[pdftex, pdftoolbar=false, hyperfootnotes=false, bookmarks,
+bookmarksopen, bookmarksnumbered, bookmarksopenlevel=2, pdfpagelabels=true,
+pdfstartpage=3, pdfstartview=FitH,]{hyperref} %Verlinkungen
+\usepackage{array}				%farbige Tabellen
+\usepackage[table]{xcolor} 			%farbige Tabellen
+\usepackage{graphicx}				% \includegraphics bnoetigt dies
+
+\usepackage{fancyhdr, graphicx}			%% Logo auf Titelseite
+
+\usepackage{amsmath,lipsum}		%% mathematisches +-
+
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{}
+\fancyhead[R]{
+%  \includegraphics[width=52mm]{./images/htwk.png}
+}
+%\usepackage{draftwatermark}			% wasserzeichen
+%Quelle: http://choorucode.com/2010/05/05/latex-adding-draft-watermark/?like=1&source=post_flair&_wpnonce=1c9f85538d
+%\SetWatermarkText{VORABVERSION}		% wasserzeichen-text
+%\SetWatermarkLightness{0.9}			% wasserzeichen-kontrast
+%\SetWatermarkScale{2.5}				% wasserzeichen-zeichengroe\ss{}e
+
+\definecolor{Navy}{rgb}{0,0,0.5}
+\definecolor{Gray}{gray}{0.5}
+\definecolor{dunkelgrau}{rgb}{0.8,0.8,0.8}
+\definecolor{hellgrau}{rgb}{0.95,0.95,0.95}
+\definecolor{hellgrau2}{rgb}{0.93,0.93,0.93}
+
+\hypersetup{
+	colorlinks=true, 			% false: boxed links; true: colored links
+	linkcolor=Navy,          		% color of internal links
+	citecolor=Gray,        			% color of links to bibliography
+	filecolor=magenta,      		% color of file links
+	urlcolor=blue,           			% color of external links
+	linkbordercolor={1 1 1}, 		% set to white
+	citebordercolor={1 1 1} 		% set to white
+}
+
+
+%Einrückung eines neuen Absatzes
+%\setlength{\parindent}{0em}
+
+%Definition der Ränder
+\usepackage[paper=a4paper,left=30mm,right=30mm,top=30mm,bottom=30mm]{geometry}
+
+%Abstand der Fussnoten
+%\deffootnote{1em}{1em}{\textsuperscript{\thefootnotemark\ }}
+
+%Regeln, bis zu welcher Tiefe (section,subsection,subsubsection) Überschriften angezeigt werden sollen (Anzeige der Überschriften im Verzeichnis / Anzeige der Nummerierung)
+%\setcounter{tocdepth}{3}
+%\setcounter{secnumdepth}{3}
+
+%%%% HTWK-Logo rechts oben einfuegen funktioniert nicht :/
+%\fancypagestyle{htwkheader}
+%{
+%   \fancyhf{}	% clear all header and footer fields
+%  \fancyhead[RO]{
+%	\makebox[\textwidth]{	%% schiebe Logo nach aussen auf den Rand
+%		\rule{1				%% nach aussen schieben hoeherer Wert -> Logo weiter nach aussen
+%		  \textwidth}{0cm} %% nicht nach unten schieben = 0cm
+%			\includegraphics*[width=52mm]{./images/htwk.png}	%%Logo HTWK
+%	  }
+%  }
+%}
+
+%%bibliography setting
+\bibliographystyle{alpha}
+
+\begin{document}
+ 
+%Beginn der Titelseite
+\begin{titlepage}
+
+\begin{small}
+\begin{flushleft}
+\vfill {
+HTWK Leipzig\\
+Fachbereich IMN \\
+Wintersemester 2013/2014}
+\end{flushleft}
+\end{small}
+ \begin{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{verbatim}
+\begin{center}
+\begin{Large}
+\textsf{\textbf{
+SmartCard-Projekt SS 2014\\
+Traincard\\
+}}
+\end{Large}
+\end{center}
+\begin{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{verbatim}
+\begin{flushleft}
+\begin{tabular}{lll}
+\textbf{Thema:} & & Erstellung eines On- und Offcard Programmes,\\
+& & welcher eine JCOP fähige Smartcard befähigt,\\
+& & intelligent zwischen Trainer und Trainiernden\\
+& & zu agieren.\\
+& & \\
+& & \\
+\textbf{eingereicht von:} & & Kurt Junghanns, B.Sc.\\
+& & Marcel Kirbst, B.Sc.\\
+& & Michael Reher, B.Sc.\\
+& & \\
+& & \\
+\textbf{Datum:} & & \today\\
+& & \\
+& & \\
+\textbf{Betreuer:} & & Prof. Dr. rer. nat. Uwe Petermann\\
+\end{tabular}
+\end{flushleft} 
+
+\end{titlepage}
+%Ende der Titelseite
+
+\newpage
+\pagenumbering{Roman}
+\setcounter{page}{1} 
+%Inhaltsverzeichnis (aktualisiert sich erst nach dem zweiten Setzen)
+%\addcontentsline{toc}{chapter}{Inhaltsverzeichnis}
+%\tableofcontents
+
+
+% Abbildungsverzeichnis
+%\newpage
+%\addcontentsline{toc}{chapter}{Abbildungsverzeichnisverzeichnis}
+%\listoffigures
+
+% Listingverzeichnis
+%\newpage
+%\addcontentsline{toc}{chapter}{Listingverzeichnis}
+%\lstlistoflistings
+ 
+%Beginn einer neuen Seite
+\clearpage
+ 
+%Anderthalbzeiliger Zeilenabstand ab hier
+\onehalfspacing
+
+%Eine Zeile Abstand nach jedem Absatz und 1,5 er abstand nach jeder zeile
+%\renewcommand{\baselinestretch}{1.5}\normalsize
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+%\sloppy
+ 
+%%\pagestyle{plain}
+ 
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1} 
+%% Inhalt
+
+
+%% Nicht vergessen: wir sollen "behandelte" Techniken verwenden und die Verwendung hier anpreisen
+
+\section{Use-Case}
+Dieses Projekt richtet sich an Sportler und ihre Trainer.
+Smartcards dienen dabei als Mittel zur Unterrichtung und Kontrolle der Sportler durch ihre Trainer.\\
+
+
+\section{Programmanforderungen}
+Eine Person der zwei Benutzergruppen Trainer und Sportler können sich auf der Smartcard registrieren und an- sowie abmelden.
+
+Trainer haben mit der Smartcard folgende Möglichkeiten:
+\begin{itemize}
+\item Einsehen von letzten Informationen von Sportlern
+\item Erstellung von Trainingsplänen
+\item Änderung von Trainingsplänen
+\item Sportlern Nachrichten hinterlegen
+\item Nachrichten von Sportlern lesen
+\end{itemize}
+
+Sportler haben dagegen folgende:
+\begin{itemize}
+\item aktuellen Trainingsplan einsehen
+\item Tagesbezogenen Plan auslesen
+\item Nachrichten von Trainern lesen
+\item Trainern Nachrichten hinterlegen
+\item aktuelles Gewicht eintragen
+\item durchgeführte Aktivitäten eintragen
+\end{itemize}
+
+Ein Trainingsplan besteht aus folgenden Daten:
+\begin{itemize}
+\item Aufwärmphase
+\item Training
+\item Auslaufphase
+\item Trainer
+\item Sportler
+\item Erstelldatum
+\item Enddatum
+\end{itemize}
+
+Jede Phase setzt sich aus verschiedenen Übungen zusammen.\\
+Eine Übung besitzt folgende Werte:
+\begin{itemize}
+\item Tag
+\item Gerät
+\item Sätze
+\item Hinweis
+\end{itemize}
+
+Ein Satz besteht aus:
+\begin{itemize}
+\item Satznummer
+\item Gewicht
+\item Wiederholungen
+\end{itemize}
+
+Die Personen haben über eine graphische Oberfläche Zugriffe auf die Funktionalitäten. Diese GUI ist schlicht gehalten.
+
+
+
+\section{Oncard}
+%datenhaltung
+%Logik für Datenzusammenhänge
+Die Smartcard hält folgende Daten vor:
+\begin{itemize}
+\item Benutzerdaten bestehend aus Benutzerart, Benutzerkennung, das gehashte Passwort und letzte Daten
+\item Trainingspläne
+\item Nachrichten
+\end{itemize}
+%wegen geringem Speicherplatz alte Daten löschen oder bei Abruf vom trainer löschen
+
+Die Logik zur Zuordnung der Daten zueinander ist ebenfalls auf der Smartcard.
+
+
+\section{Offcard}
+%Oberfläche
+%Logik zur Oberfläche
+Zum Offcard Programm zählt neben der GUI die dazugehörige Logik zum Abruf, senden und anzeigen der Daten.\\
+
+
+
+\section{Verwaltungstechnisch}
+Aufgabenteilung:
+\begin{itemize}
+\item{GUI}
+\item{Offcard}
+\item{Oncard}
+\end{itemize}
+
+Abgabe ist der 11.7.2014.
+
+
+%% So fügt man eine Vektorgrafik als PDF ein: (siehe Quellcode dieses Dokuments)
+
+%\begin{figure}[htb]
+%\begin{center}
+% \includegraphics[width=1\hsize]{./Zeichnungen/IPv4NAT.pdf}
+% \end{center}
+%\caption[Beispielhafte Standardkonfiguration eines Internetanschlu\ss{} mit NAT, Quelle: Autor, verwendete Symbole unterliegen der
+%GPL]{\label{stdinet}Beispielhafte Standardkonfiguration eines Internetanschlu\ss{}.}
+%\end{figure}
+
+
+\newpage
+\pagenumbering{Roman}
+\setcounter{page}{5} 
+
+
+%Glossar
+%\newpage
+%\section*{Glossar}
+%\addcontentsline{toc}{chapter}{Glossar}
+%\begin{description}
+%\item[Eclipse] kostenfreie auf Java basierende IDE
+%\end{description}
+
+\newpage
+\thispagestyle{empty}
+\begin{center}
+\Large{Hochschule für Technik, Wirtschaft und Kultur\\
+Fakultät Informatik, Mathematik und Naturwissenschaften }\\
+\end{center}
+
+\begin{verbatim}
+
+
+
+
+
+
+\end{verbatim}
+
+\begin{center}
+\textbf{\LARGE{Eidesstattliche Versicherung}}
+\end{center}
+\begin{verbatim}
+
+
+\end{verbatim}
+
+\begin{flushleft}
+Wir erklären hiermit, dass wir diese Projektdokumentation selbstständig ohne Hilfe Dritter und ohne Benutzung anderer als der angegebenen Quellen und Hilfsmittel verfasst haben. Alle den benutzten Quellen wörtlich oder sinngemäß entnommenen Stellen sind als solche einzeln kenntlich gemacht.
+
+Diese Arbeit ist bislang keiner anderen Prüfungsbehörde vorgelegt und auch nicht veröffentlicht worden.
+
+Wir sind uns bewusst, dass eine falsche Erklärung rechtliche Folgen haben wird. 
+\begin{verbatim}
+
+
+
+
+
+
+
+\end{verbatim}
+Leipzig, 11.7.2014, Marcel Kirbst
+\hrule width .6\hsize\ \\
+Leipzig, 11.7.2014, Kurt Junghanns
+\hrule width .6\hsize\ \\
+Leipzig, 11.7.2014, Michael Reher
+\hrule width .6\hsize\ \\
+Ort, Datum, Unterschrift
+\end{flushleft}
+
+\end{document}
