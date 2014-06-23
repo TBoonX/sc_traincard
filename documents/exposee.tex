@@ -102,7 +102,7 @@ pdfstartpage=3, pdfstartview=FitH,]{hyperref} %Verlinkungen
 \vfill {
 HTWK Leipzig\\
 Fachbereich IMN \\
-Wintersemester 2013/2014}
+Sommersemester 2014}
 \end{flushleft}
 \end{small}
  \begin{verbatim}
@@ -143,9 +143,9 @@ Traincard\\
 \end{verbatim}
 \begin{flushleft}
 \begin{tabular}{lll}
-\textbf{Thema:} & & Erstellung eines On- und Offcard Programmes,\\
-& & welcher eine JCOP fähige Smartcard befähigt,\\
-& & intelligent zwischen Trainer und Trainiernden\\
+\textbf{Thema:} & & Erstellung eines On- und Offcard Programm,\\
+& & welches eine JCOP fähige Smartcard befähigt,\\
+& & intelligent zwischen Fitnesstrainer und Sportler\\
 & & zu agieren.\\
 & & \\
 & & \\
@@ -206,39 +206,47 @@ Traincard\\
 
 \section{Use-Case}
 Dieses Projekt richtet sich an Sportler und ihre Trainer.
-Smartcards dienen dabei als Mittel zur Unterrichtung und Kontrolle der Sportler durch ihre Trainer.\\
+
+Jeder Sportler erhält eine persönliche Smartcard, womit er Zugriff auf seinen Trainingsplan hat und seinen Fortschritt eintragen kann.
+
+Dem Trainer dient die Smartcard dabei als Mittel zur Übertragung von Trainingsanweisungen sowie -plänen und zur Kontrolle der Sportler.
+
+Die beiden Benutzergruppen erhalten jeweils ein exklusives Passwort, womit sie Zugriff auf die Daten erhalten.
+Die Verwendung erfolgt zeitlich exklusiv durch eine der beiden Personen. Lesende Zugriffe erfolgen direkt, schreibende Zugriffe erfordern das Passwort des Benutzers, wobei dessen Berechtigung geprüft wird.
+
+Zur besseren Handhabung erfolgt für Schreibzugriffsrechte eine An- sowie Abmeldung des jeweiligen Benutzers. Zur Darstellung des Trainingsplanes sowie Trainingsfortschritts sind keine gesonderten Berechtigungen notwendig.
+
+Die Smartcard enthält Daten zu einem Sportler und seinem Trainer. Weiterhin wird die Smartcard mit einem Passwort des Sportlers und des Trainers initialisiert.
 
 
+
+%Nachrichten weg
+%Lesen ohne passwort
+%Daten eventuell komprimieren/zusammenfassen
 \section{Programmanforderungen}
-Eine Person der zwei Benutzergruppen Trainer und Sportler können sich auf der Smartcard registrieren und an- sowie abmelden.
+Eine Person aus den zwei Benutzergruppen Trainer und Sportler kann die Funktionalitäten direkt mit eventueller Passwortangabe nutzen.
 
 Trainer haben mit der Smartcard folgende Möglichkeiten:
 \begin{itemize}
-\item Einsehen von letzten Informationen von Sportlern
+\item Einsehen des Trainingsstand
 \item Erstellung von Trainingsplänen
 \item Änderung von Trainingsplänen
-\item Sportlern Nachrichten hinterlegen
-\item Nachrichten von Sportlern lesen
 \end{itemize}
 
 Sportler haben dagegen folgende:
 \begin{itemize}
 \item aktuellen Trainingsplan einsehen
-\item Tagesbezogenen Plan auslesen
-\item Nachrichten von Trainern lesen
-\item Trainern Nachrichten hinterlegen
+\item tagesbezogenen Trainingsplan einsehen
 \item aktuelles Gewicht eintragen
-\item durchgeführte Aktivitäten eintragen
+\item durchgeführte Übungen eintragen
 \end{itemize}
 
 Ein Trainingsplan besteht aus folgenden Daten:
 \begin{itemize}
 \item Aufwärmphase
-\item Training
+\item Trainingsphase
 \item Auslaufphase
-\item Trainer
-\item Sportler
-\item Erstelldatum
+\item Startdatum
 \item Enddatum
 \end{itemize}
 
@@ -258,22 +266,23 @@ Ein Satz besteht aus:
 \item Wiederholungen
 \end{itemize}
 
-Die Personen haben über eine graphische Oberfläche Zugriffe auf die Funktionalitäten. Diese GUI ist schlicht gehalten.
 
+Die Personen haben über eine graphische Oberfläche Zugriffe auf die Funktionalitäten.
 
+%Screenshots aus swing GUI
 
 \section{Oncard}
 %datenhaltung
 %Logik für Datenzusammenhänge
 Die Smartcard hält folgende Daten vor:
 \begin{itemize}
-\item Benutzerdaten bestehend aus Benutzerart, Benutzerkennung, das gehashte Passwort und letzte Daten
+\item Benutzerdaten bestehend aus Benutzerart und das gehashte Passwort
 \item Trainingspläne
-\item Nachrichten
+\item Trainingsfortschritt, welcher nach Benutzereingaben automatisch aktualisiert wird
 \end{itemize}
 %wegen geringem Speicherplatz alte Daten löschen oder bei Abruf vom trainer löschen
 
-Die Logik zur Zuordnung der Daten zueinander ist ebenfalls auf der Smartcard.
+Die Auswertung von Anfragen und den überlieferten Daten sowie die Logik zur Aktualisierung des Trainingsfortschritts befindet sich ebenfalls auf der Smartcard.
 
 
 \section{Offcard}
@@ -283,12 +292,12 @@ Zum Offcard Programm zählt neben der GUI die dazugehörige Logik zum Abruf, sen
 
 
 
-\section{Verwaltungstechnisch}
-Aufgabenteilung:
+\section{Aufgabenteilung}
+
 \begin{itemize}
-\item{GUI}
-\item{Offcard}
-\item{Oncard}
+\item{GUI:} Michael Reher
+\item{Offcard:} Marcel Kirbst
+\item{Oncard:} Kurt Junghanns und Michael Reher
 \end{itemize}
 
 Abgabe ist der 11.7.2014.
