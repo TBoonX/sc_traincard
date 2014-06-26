@@ -61,8 +61,16 @@ public class TrainerView extends JFrame{
 					}
 				});
 				btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-				btnNewButton.setBounds(220, 393, 265, 58);
+				btnNewButton.setBounds(378, 310, 265, 58);
 				panel.add(btnNewButton);
+				
+				JButton button_1 = new JButton("neuer Trainingsplan");
+				button_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					}
+				});
+				button_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+				button_1.setBounds(40, 310, 265, 58);
+				panel.add(button_1);
 	}
-
 }
