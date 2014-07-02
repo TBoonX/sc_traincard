@@ -2,11 +2,11 @@ package htwk.smartcard.traincard.model;
 
 public class Progress extends IModel {
 
-	private char stageID;
+	private byte stageID;
 	private ProgressElement last;
 	private ProgressElement best;
 	private ProgressElement worst;
-	public Progress(char stageID, ProgressElement last, ProgressElement best, ProgressElement worst) {
+	public Progress(byte stageID, ProgressElement last, ProgressElement best, ProgressElement worst) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.stageID = stageID;
@@ -26,10 +26,10 @@ public class Progress extends IModel {
 	public void setLast(ProgressElement last) {
 		this.last = last;
 	}
-	public char getStageID() {
+	public byte getStageID() {
 		return stageID;
 	}
-	public void setStageID(char stageID) {
+	public void setStageID(byte stageID) {
 		this.stageID = stageID;
 	}
 	public ProgressElement getWorst() {

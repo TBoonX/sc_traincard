@@ -2,29 +2,29 @@ package htwk.smartcard.traincard.model;
 
 public class Set extends IModel {
 
-	private char number;
+	private byte number;
 	private short weight;
-	private char replicates;
+	private byte replicates;
 	
 	
 	
-	public Set(char number, short weight, char replicates) {
+	public Set(byte number, short weight, byte replicates) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.number = number;
 		this.weight = weight;
 		this.replicates = replicates;
 	}
-	public char getNumber() {
+	public byte getNumber() {
 		return number;
 	}
-	public void setNumber(char number) {
+	public void setNumber(byte number) {
 		this.number = number;
 	}
-	public char getReplicates() {
+	public byte getReplicates() {
 		return replicates;
 	}
-	public void setReplicates(char replicates) {
+	public void setReplicates(byte replicates) {
 		this.replicates = replicates;
 	}
 	public short getWeight() {
@@ -33,6 +33,4 @@ public class Set extends IModel {
 	public void setWeight(short weight) {
 		this.weight = weight;
 	}
-	
-	
 }

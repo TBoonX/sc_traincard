@@ -3,11 +3,11 @@ package htwk.smartcard.traincard.model;
 public class Stage extends IModel {
 
 	private byte day;
-	private char deviceID;
+	private byte deviceID;
 	private Set[] sets;
-	private char musclegroupID;
-	private char stageID;
-	public Stage(byte day, char deviceID, Set[] sets, char musclegroupID, char stageID) {
+	private byte musclegroupID;
+	private byte stageID;
+	public Stage(byte day, byte deviceID, Set[] sets, byte musclegroupID, byte stageID) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.day = day;
@@ -22,16 +22,16 @@ public class Stage extends IModel {
 	public void setDay(byte day) {
 		this.day = day;
 	}
-	public char getDeviceID() {
+	public byte getDeviceID() {
 		return deviceID;
 	}
-	public void setDeviceID(char deviceID) {
+	public void setDeviceID(byte deviceID) {
 		this.deviceID = deviceID;
 	}
-	public char getMusclegroupID() {
+	public byte getMusclegroupID() {
 		return musclegroupID;
 	}
-	public void setMusclegroupID(char musclegroupID) {
+	public void setMusclegroupID(byte musclegroupID) {
 		this.musclegroupID = musclegroupID;
 	}
 	public Set[] getSets() {
@@ -40,12 +40,10 @@ public class Stage extends IModel {
 	public void setSets(Set[] sets) {
 		this.sets = sets;
 	}
-	public char getStageID() {
+	public byte getStageID() {
 		return stageID;
 	}
-	public void setStageID(char stageID) {
+	public void setStageID(byte stageID) {
 		this.stageID = stageID;
 	}
-	
-	
 }

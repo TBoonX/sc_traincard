@@ -3,25 +3,25 @@ package htwk.smartcard.traincard.model;
 public class Date extends IModel {
 
 	private short year;
-	private char month;
-	private char day;
-	public Date(short year, char month, char day) {
+	private byte month;
+	private byte day;
+	public Date(short year, byte month, byte day) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.year = year;
 		this.month = month;
 		this.day = day;
 	}
-	public char getDay() {
+	public byte getDay() {
 		return day;
 	}
-	public void setDay(char day) {
+	public void setDay(byte day) {
 		this.day = day;
 	}
-	public char getMonth() {
+	public byte getMonth() {
 		return month;
 	}
-	public void setMonth(char month) {
+	public void setMonth(byte month) {
 		this.month = month;
 	}
 	public short getYear() {
@@ -30,6 +30,5 @@ public class Date extends IModel {
 	public void setYear(short year) {
 		this.year = year;
 	}
-	
 	
 }
