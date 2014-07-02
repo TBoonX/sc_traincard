@@ -10,7 +10,7 @@ public class TestDate extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		that = new Date((short)2014, (byte)0x06, (byte)0x02);
+		that = new Date((byte)0x0e, (byte)0x06, (byte)0x02);
 	}
 
 	/*
@@ -23,14 +23,20 @@ public class TestDate extends TestCase {
 		
 		short length = (short)((dateAsBytes[1]<<8) | (dateAsBytes[2]));
 		
-		assertSame(length, (short)4);
+		assertSame(length, (short)3);
 	}
 
 	/*
 	 * Test method for 'htwk.smartcard.traincard.model.Date.fromBytes(byte[])'
 	 */
 	public void testFromBytes() {
-
+		byte[] thatbytes = that.toBytes();
+		
+		Date nweone = Date.fromBytes(thatbytes);
+		
+		assertEquals(nweone.getYear(), that.getYear());
+		assertEquals(nweone.getMonth(), that.getMonth());
+		assertEquals(nweone.getDay(), that.getDay());
 	}
 
 }

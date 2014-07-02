@@ -2,9 +2,9 @@ package htwk.smartcard.traincard.model;
 
 public class ProgressElement extends IModel {
 
-	private short weight;
+	private byte weight;
 	private Date date;
-	public ProgressElement(short weight, Date date) {
+	public ProgressElement(byte weight, Date date) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.weight = weight;
@@ -16,10 +16,10 @@ public class ProgressElement extends IModel {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public short getWeight() {
+	public byte getWeight() {
 		return weight;
 	}
-	public void setWeight(short weight) {
+	public void setWeight(byte weight) {
 		this.weight = weight;
 	}
 	

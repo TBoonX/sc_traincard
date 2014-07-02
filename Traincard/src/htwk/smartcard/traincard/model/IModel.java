@@ -9,7 +9,7 @@ public abstract class IModel {
 	public byte[] toBytes(){
 		return null;
 	}
-	public IModel fromBytes(byte[] bytes) {
+	public static IModel fromBytes(byte[] bytes) {
 		return null;
 	}
 }

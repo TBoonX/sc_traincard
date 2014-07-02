@@ -5,10 +5,10 @@ public class Date extends IModel {
 
 	public static final byte IDENTIFICATOR = 0x01;
 	
-	private short year;
+	private byte year;
 	private byte month;
 	private byte day;
-	public Date(short year, byte month, byte day) {
+	public Date(byte year, byte month, byte day) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.year = year;
@@ -27,29 +27,36 @@ public class Date extends IModel {
 	public void setMonth(byte month) {
 		this.month = month;
 	}
-	public short getYear() {
+	public byte getYear() {
 		return year;
 	}
-	public void setYear(short year) {
+	public void setYear(byte year) {
 		this.year = year;
 	}
 	public byte[] toBytes(){
-		byte[] ret = new byte[7];
+		byte[] ret = new byte[6];
 		
 		//ID
 		ret[0] = IDENTIFICATOR;
 		//length
 		ret[1] = 0x00;
-		ret[2] = 0x04;
+		ret[2] = 0x03;
 		//data
-		ret[3] = (byte)(year & 0xff);;
-		ret[4] = (byte)((year >> 8) & 0xff);
-		ret[5] = month;
-		ret[6] = day;
+		ret[3] = year;
+		ret[4] = month;
+		ret[5] = day;
 		
 		return ret;
 	}
-	public IModel fromBytes(byte[] bytes) {
-		return null;
+	public static Date fromBytes(byte[] bytes) {
+		if (IDENTIFICATOR != bytes[0])
+			return null;
+		
+		short length = (short)((bytes[1]<<8) | (bytes[2]));
+		
+		if (length != 3)
+			return null;
+		
+		return new Date(bytes[3], bytes[4], bytes[5]);
 	}
 }
