@@ -2,6 +2,8 @@ package htwk.smartcard.traincard.model;
 
 public class Set extends IModel {
 
+	public static final byte IDENTIFICATOR = 0x02;
+	
 	private byte number;
 	private byte weight;
 	private byte replicates;
