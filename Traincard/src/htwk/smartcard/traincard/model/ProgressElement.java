@@ -2,6 +2,8 @@ package htwk.smartcard.traincard.model;
 
 public class ProgressElement extends IModel {
 
+	public static final byte IDENTIFICATOR = 0x05;
+	
 	private byte weight;
 	private Date date;
 	public ProgressElement(byte weight, Date date) {

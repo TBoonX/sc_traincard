@@ -1,7 +1,5 @@
 package htwk.smartcard.traincard.model;
 
-import static org.junit.Assert.assertTrue;
-
 public class Stage extends IModel {
 
 	public static final byte IDENTIFICATOR = 0x03;

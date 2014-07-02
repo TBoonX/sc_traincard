@@ -2,6 +2,8 @@ package htwk.smartcard.traincard.model;
 
 public class Workoutplan extends IModel {
 
+	public static final byte IDENTIFICATOR = 0x04;
+	
 	private Stage warmupstage ;
 	private Stage trainingstage ;
 	private Stage cooldownstage;

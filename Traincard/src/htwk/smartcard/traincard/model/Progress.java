@@ -2,6 +2,8 @@ package htwk.smartcard.traincard.model;
 
 public class Progress extends IModel {
 
+	public static final byte IDENTIFICATOR = 0x06;
+	
 	private byte stageID;
 	private ProgressElement last;
 	private ProgressElement best;
