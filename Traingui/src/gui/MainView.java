@@ -1,20 +1,17 @@
 package gui;
 
-import javax.swing.JFrame;
-import java.awt.GridLayout;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 import java.awt.Font;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import main.Traingui;
+
+
+
 
 public class MainView extends JFrame{
 	public MainView() {
@@ -31,10 +28,10 @@ public class MainView extends JFrame{
 		panel.add(btnTrainingsplan);
 		btnTrainingsplan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JButton btnNewButton = new JButton("Tagesplan");
-		btnNewButton.setBounds(205, 93, 251, 71);
-		panel.add(btnNewButton);
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		JButton btnTagesplan = new JButton("Tagesplan");
+		btnTagesplan.setBounds(205, 93, 251, 71);
+		panel.add(btnTagesplan);
+		btnTagesplan.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
 		JButton btnTrainingsfortschritt = new JButton("Trainingsfortschritt");
 		btnTrainingsfortschritt.setBounds(205, 175, 251, 71);
@@ -46,12 +43,43 @@ public class MainView extends JFrame{
 		panel.add(btnNewButton_1);
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
+		
+		
 		JButton btnLogin = new JButton("Login: Trainer");
 		btnLogin.setBounds(413, 339, 206, 71);
 		panel.add(btnLogin);
 		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnNewButton.addActionListener(new ActionListener() {
+		
+		btnTagesplan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Traingui.getTraingui().setScreen(new TagesplanView());
+				
+			}
+		});
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Traingui.getTraingui().setScreen(new PasswordCheck(PasswordCheck.SPORTLER));
+				
+			}
+		});
+		btnTrainingsfortschritt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Traingui.getTraingui().setScreen(new FortschrittView());
+				
+			}
+		});
+		
+		btnTrainingsplan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Traingui.getTraingui().setScreen(new TrainingsplanView());
+				
+			}
+		});
+		
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Traingui.getTraingui().setScreen(new PasswordCheck(PasswordCheck.TRAINER));
+				
 			}
 		});
 		

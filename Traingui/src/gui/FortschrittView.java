@@ -1,5 +1,8 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -7,10 +10,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import main.Traingui;
+
 public class FortschrittView extends JFrame{
 	private JTable table;
 	private JScrollPane scrollPane;
-	private JButton btnZurck;
+	private JButton backButton;
 	public FortschrittView() {
 getContentPane().setLayout(null);
 		
@@ -50,9 +55,15 @@ getContentPane().setLayout(null);
 				scrollPane = new JScrollPane(table);
 				scrollPane.setBounds(10, 11, 664, 362);
 				panel.add(scrollPane);
-				btnZurck = new JButton("zur\u00FCck");
-				btnZurck.setBounds(585, 428, 89, 23);
-				panel.add(btnZurck);
+				backButton = new JButton("zur\u00FCck");
+				backButton.setBounds(585, 428, 89, 23);
+				backButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Traingui.getTraingui().setScreen(new MainView());
+						
+					}
+				});
+				panel.add(backButton);
 	}
 
 }
