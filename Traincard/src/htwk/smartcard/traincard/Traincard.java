@@ -44,7 +44,8 @@ public class Traincard extends Applet {
 	final byte SPORTSMAN = (byte)0x02;
 	boolean trainer_loggedin = false;
 	boolean sportsman_loggedin = false;
-	byte[] workoutplans;
+	byte[] workoutplan;
+	final byte MAXRESPONSEDATALENGTH = (byte)253; 
 	byte[] weigth_history;
 	byte[] changed_exercies;
 	
@@ -265,12 +266,105 @@ public class Traincard extends Applet {
 		return new byte[]{0x01, 0x02, kind, (byte)0x01};
 	}
 	
+	/**
+	 * get workoutplan
+	 * sometimes more than one apdus neccessary
+	 * 
+	 * data bytes should include the needed number of apdu
+	 * 
+	 * return count of all apdus, length of data, the current apdu number and the part of the workplan
+	 * 
+	 * @param buffer
+	 * @return
+	 */
 	private byte[] getWorkoutplan(byte[] buffer) {
-		return buffer;
+		byte apduNumber = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+		if (apduNumber < 1 || workoutplan == null || workoutplan.length < 3)
+			return errorbytes;
+		
+		//calculate needed amount of apdus and the range which should returned
+		byte mod = (byte)(workoutplan.length % MAXRESPONSEDATALENGTH);
+		byte mod_ = (byte)(mod == 0 ? 0 : 1);
+		byte apduAmount = (byte)1;
+		if (workoutplan.length-mod > 0)//no division with zero
+			apduAmount = (byte)(((workoutplan.length-mod)/MAXRESPONSEDATALENGTH)+mod_);
+		
+		//create ret array which contains the part of the workoutplan
+		byte retLength = MAXRESPONSEDATALENGTH;
+		if (apduAmount == 1)
+			retLength = (byte)workoutplan.length;
+		else if (apduAmount == apduNumber)
+			retLength = mod;
+		retLength += (byte)3;	//for NoA, LEN und apduNumber
+		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
+		
+		//copy the part
+		short startIndex = (short)((apduNumber-1)*MAXRESPONSEDATALENGTH);
+		if (startIndex > workoutplan.length)
+			return errorbytes;
+		Util.arrayCopy(workoutplan, startIndex, ret, (short)3, (short)(retLength-3));
+		
+		//set header
+		ret[0] = apduAmount;
+		ret[1] = (byte)(ret.length+1);
+		ret[2] = apduNumber;
+		
+		
+		return ret;
 	}
 	
+	/**
+	 * Save the given workoutplan
+	 * 
+	 * data bytes should include the number of the apdu and after that byte all bytes of the workoutplan
+	 * 
+	 * return just the success byte
+	 * 
+	 * example of workpoutplan
+	 * 0400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
+	 * @param buffer
+	 * @return
+	 */
 	private byte[] saveWorkoutplan(byte[] buffer) {
-		return buffer;
+		byte countOfApdus = buffer[NOA]; 
+		byte length = buffer[LENGTH];
+		byte apduNumber = buffer[DATA];
+		boolean firstApdu = apduNumber == 0x01 ? true : false;
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+		if (!trainer_loggedin)
+			return errorbytes;
+		
+		if (firstApdu) {
+			//create bytearray which holds the workoutplan
+			workoutplan = new byte[length-1];
+			Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)0, (short)(length-1));
+			
+			return new byte[]{0x01, 0x01, 0x01};
+		}
+		
+		//!firstApdu
+		//save head in transient array
+		byte[] temp = JCSystem.makeTransientByteArray((short)workoutplan.length, JCSystem.CLEAR_ON_DESELECT );
+		Util.arrayCopy(workoutplan, (short)0, temp, (short)0, (short)workoutplan.length);
+		//workoutplan is now bigger
+		workoutplan = new byte[temp.length+length-1];
+		//copy head
+		Util.arrayCopy(temp, (short)0, workoutplan, (short)0, (short)temp.length);
+		//copy tail
+		Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)0, (short)(length-1));
+		
+		return new byte[]{0x01, 0x01, 0x01};
 	}
 	
 	private byte[] saveWeight(byte[] buffer) {
