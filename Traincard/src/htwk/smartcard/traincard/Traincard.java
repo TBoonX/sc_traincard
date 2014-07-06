@@ -71,6 +71,14 @@ public class Traincard extends Applet {
 			output = register(buf);
 			ret_length = (short)(output.length);
 			break;
+		case LOGIN:
+			output = login(buf, true);
+			ret_length = (short)(output.length);
+			break;
+		case LOGOUT:
+			output = login(buf, false);
+			ret_length = (short)(output.length);
+			break;
 		case GETWORKOUTPLAN:
 			output = getWorkoutplan(buf);
 			ret_length = (short)(output.length+1);
@@ -182,7 +190,7 @@ public class Traincard extends Applet {
 				return errorbytes;
 			}
 			
-			password_trainer = new byte[length];
+			password_trainer = new byte[length-1];
 			Util.arrayCopy(buffer, (short)(DATA+1), password_trainer, (short)0, (short)(length-1));
 			break;
 		case SPORTSMAN:
@@ -190,8 +198,65 @@ public class Traincard extends Applet {
 				return errorbytes;
 			}
 			
-			password_sportsman = new byte[length];
+			password_sportsman = new byte[length-1];
 			Util.arrayCopy(buffer, (short)(DATA+1), password_sportsman, (short)0, (short)(length-1));
+			break;
+		default:
+			return errorbytes;
+		}
+		
+		return new byte[]{0x01, 0x02, kind, (byte)0x01};
+	}
+	
+	/**
+	 * login or logout the given user with the given password
+	 * 
+	 * data bytes should include kind byte and password bytes
+	 * example: /send 80 08 01 04 01 0a 0b 0c
+	 * 
+	 * returned bytes include kind byte and success byte
+	 * 
+	 * @param buffer
+	 * @return
+	 */
+	private byte[] login(byte[] buffer, boolean login) {
+		byte length = buffer[LENGTH];
+		byte kind = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x02;
+		errorbytes[2] = kind;
+		errorbytes[3] = 0x00;
+		
+		switch (kind) {
+		case TRAINER:
+			if (null == password_trainer || length-1 != password_trainer.length) {
+				return errorbytes;
+			}
+			
+			if (!login && !trainer_loggedin)
+				return errorbytes;
+			
+			if (0 != Util.arrayCompare(password_trainer, (short)0, buffer, (short)(DATA+1), (short)(length-1)))
+				return errorbytes;
+			
+			trainer_loggedin = login;
+			
+			break;
+		case SPORTSMAN:
+			if (null == password_sportsman || length-1 != password_sportsman.length) {
+				return errorbytes;
+			}
+			
+			if (!login && !sportsman_loggedin)
+				return errorbytes;
+			
+			if (0 != Util.arrayCompare(password_sportsman, (short)0, buffer, (short)(DATA+1), (short)(length-1)))
+				return errorbytes;
+			
+			sportsman_loggedin = login;
+			
 			break;
 		default:
 			return errorbytes;
