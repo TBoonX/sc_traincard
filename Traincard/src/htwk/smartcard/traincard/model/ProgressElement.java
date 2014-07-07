@@ -26,7 +26,7 @@ public class ProgressElement extends IModel {
 	}
 
 	public byte[] toBytes(){
-		byte[] ret = new byte[6];
+		byte[] ret = new byte[3+1+6];
 		
 		//ID
 		ret[0] = IDENTIFICATOR;
@@ -37,7 +37,7 @@ public class ProgressElement extends IModel {
 		ret[3] = weight;
 		byte[] datebytes = date.toBytes();
 		for (short j = 4; j < 10; j++) {
-			ret[j] = datebytes[j-3];
+			ret[j] = datebytes[j-4];
 		}
 		
 		return ret;
