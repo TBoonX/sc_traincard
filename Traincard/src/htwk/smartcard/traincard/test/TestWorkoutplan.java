@@ -1,6 +1,10 @@
 package htwk.smartcard.traincard.test;
 
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import htwk.smartcard.traincard.model.Date;
 import htwk.smartcard.traincard.model.Set;
 import htwk.smartcard.traincard.model.Stage;
@@ -44,6 +48,9 @@ public class TestWorkoutplan {
 	public void testToBytes() {
 		byte[] bytes = that.toBytes();
 		
+		System.out.println(getHex(bytes));
+		System.out.println(getHex2(bytes));
+		
 		assertEquals(Workoutplan.IDENTIFICATOR, bytes[0]);
 		
 		short length = (short)((bytes[1]<<8) | (bytes[2]));
@@ -76,5 +83,29 @@ public class TestWorkoutplan {
 		assertEquals(that.getEnddate().getMonth(), wp.getEnddate().getMonth());
 		assertEquals(that.getTrainingstage()[0].getSets()[0].getWeight(), wp.getTrainingstage()[0].getSets()[0].getWeight());
 	}
-
+	
+	 static final String HEXES = "0123456789ABCDEF";
+	  public static String getHex( byte [] raw ) {
+	    if ( raw == null ) {
+	      return null;
+	    }
+	    final StringBuilder hex = new StringBuilder( 2 * raw.length );
+	    for ( final byte b : raw ) {
+	      hex.append(HEXES.charAt((b & 0xF0) >> 4))
+	         .append(HEXES.charAt((b & 0x0F)))
+	         .append(" ");
+	    }
+	    return hex.toString();
+	  }
+	  public static String getHex2( byte [] raw ) {
+		    if ( raw == null ) {
+		      return null;
+		    }
+		    final StringBuilder hex = new StringBuilder( 2 * raw.length );
+		    for ( final byte b : raw ) {
+		      hex.append(HEXES.charAt((b & 0xF0) >> 4))
+		         .append(HEXES.charAt((b & 0x0F)));
+		    }
+		    return hex.toString();
+		  }
 }

@@ -13,13 +13,17 @@ public class TestProgressElement {
 
 	@Before
 	public void setUp() throws Exception {
-		//Date date = new Date((byte)0x48, (byte)0x48, (byte)0x48)
-		//that = new ProgressElement((byte)0x48, date)
+		Date date = new Date((byte)0x0b, (byte)0x07, (byte)0x05);
+		that = new ProgressElement((byte)0x24,(byte)0x0a, date);
 	}
 
 	@Test
 	public void testFromBytesByteArray() {
-		fail("Not yet implemented");
+		byte[] bytes = that.toBytes();
+		
+		ProgressElement newthat = ProgressElement.fromBytes(bytes);
+		
+		assertEquals(that.getReplicates(), newthat.getReplicates());
 	}
 
 }

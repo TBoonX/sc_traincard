@@ -5,11 +5,13 @@ public class ProgressElement extends IModel {
 	public static final byte IDENTIFICATOR = 0x05;
 	
 	private byte weight;
+	private byte replicates;
 	private Date date;
-	public ProgressElement(byte weight, Date date) {
+	
+	public ProgressElement(byte weight, byte replicates, Date date) {
 		super();
-		// TODO Auto-generated constructor stub
 		this.weight = weight;
+		this.replicates = replicates;
 		this.date = date;
 	}
 	public Date getDate() {
@@ -24,9 +26,16 @@ public class ProgressElement extends IModel {
 	public void setWeight(byte weight) {
 		this.weight = weight;
 	}
+	
 
+	public byte getReplicates() {
+		return replicates;
+	}
+	public void setReplicates(byte replicates) {
+		this.replicates = replicates;
+	}
 	public byte[] toBytes(){
-		byte[] ret = new byte[6];
+		byte[] ret = new byte[3+2+6];
 		
 		//ID
 		ret[0] = IDENTIFICATOR;
@@ -35,9 +44,10 @@ public class ProgressElement extends IModel {
 		ret[2] = 0x07;
 		//data
 		ret[3] = weight;
+		ret[4] = replicates;
 		byte[] datebytes = date.toBytes();
-		for (short j = 4; j < 10; j++) {
-			ret[j] = datebytes[j-3];
+		for (short j = 5; j < 11; j++) {
+			ret[j] = datebytes[j-5];
 		}
 		
 		return ret;
@@ -52,15 +62,15 @@ public class ProgressElement extends IModel {
 			return null;
 		
 		byte[] datebytes = new byte[6];
-		datebytes[0] = bytes[4];
-		datebytes[1] = bytes[5];
-		datebytes[2] = bytes[6];
-		datebytes[3] = bytes[7];
-		datebytes[4] = bytes[8];
-		datebytes[5] = bytes[9];
+		datebytes[0] = bytes[5];
+		datebytes[1] = bytes[6];
+		datebytes[2] = bytes[7];
+		datebytes[3] = bytes[8];
+		datebytes[4] = bytes[9];
+		datebytes[5] = bytes[10];
 		Date date = Date.fromBytes(datebytes);
 		
-		return new ProgressElement(bytes[3], date);
+		return new ProgressElement(bytes[3], bytes[4], date);
 	}
 	
 }
