@@ -14,9 +14,9 @@ public class TestProgress {
 	@Before
 	public void setUp() throws Exception {
 		Date date = new Date((byte)0x0b, (byte)0x07, (byte)0x05);
-		ProgressElement last = new ProgressElement((byte)0x24, date);
-		ProgressElement best = new ProgressElement((byte)0x26, date);
-		ProgressElement worst = new ProgressElement((byte)0x2f, date);
+		ProgressElement last = new ProgressElement((byte)0x24,(byte)0x0a, date);
+		ProgressElement best = new ProgressElement((byte)0x26,(byte)0x0a, date);
+		ProgressElement worst = new ProgressElement((byte)0x2f,(byte)0x08, date);
 		
 		that = new Progress((byte)0x01, last, best, worst);
 	}

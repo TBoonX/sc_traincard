@@ -42,7 +42,7 @@ public class Progress extends IModel {
 	}
 
 	public byte[] toBytes(){
-		byte[] ret = new byte[34];
+		byte[] ret = new byte[37];
 		
 		//ID
 		ret[0] = IDENTIFICATOR;
@@ -52,16 +52,16 @@ public class Progress extends IModel {
 		//data
 		ret[3] = stageID;
 		byte[] pebytes = last.toBytes();
-		for (short j = 4; j < 14; j++) {
+		for (short j = 4; j < 15; j++) {
 			ret[j] = pebytes[j-4];
 		}
 		pebytes = best.toBytes();
-		for (short j = 14; j < 24; j++) {
-			ret[j] = pebytes[j-14];
+		for (short j = 15; j < 26; j++) {
+			ret[j] = pebytes[j-15];
 		}
 		pebytes = worst.toBytes();
-		for (short j = 24; j < 34; j++) {
-			ret[j] = pebytes[j-24];
+		for (short j = 26; j < 37; j++) {
+			ret[j] = pebytes[j-26];
 		}
 		
 		return ret;
@@ -75,17 +75,17 @@ public class Progress extends IModel {
 		if (length != 31)
 			return null;
 		
-		byte[] pebytes = new byte[10];
-		for (short j = 4; j < 14; j++) {
+		byte[] pebytes = new byte[11];
+		for (short j = 4; j < 15; j++) {
 			pebytes[j-4] = bytes[j];
 		}
 		ProgressElement last = ProgressElement.fromBytes(pebytes);
-		for (short j = 14; j < 24; j++) {
-			pebytes[j-14] = bytes[j];
+		for (short j = 15; j < 26; j++) {
+			pebytes[j-15] = bytes[j];
 		}
 		ProgressElement best = ProgressElement.fromBytes(pebytes);
-		for (short j = 24; j < 34; j++) {
-			pebytes[j-24] = bytes[j];
+		for (short j = 26; j < 37; j++) {
+			pebytes[j-26] = bytes[j];
 		}
 		ProgressElement worst = ProgressElement.fromBytes(pebytes);
 		
