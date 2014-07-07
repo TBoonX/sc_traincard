@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,7 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import main.Constants;
 import main.Traingui;
@@ -39,6 +39,7 @@ public class TrainerView extends JFrame{
 	private JComboBox comboBoxYearStart;
 	private JComboBox comboBoxYearEnd;
 	private JComboBox comboBoxDayStart;
+	private TableRowSorter sorter;
 	
 	
 	public TrainerView() {
@@ -74,9 +75,15 @@ public class TrainerView extends JFrame{
 				return columnTypes[columnIndex];
 			}
 		});
+		
+		sorter = new TableRowSorter(table.getModel());
+		table.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
+		
 		table.getColumnModel().getColumn(1).setPreferredWidth(85);
 		table.getColumnModel().getColumn(2).setPreferredWidth(62);
 		table.getColumnModel().getColumn(4).setPreferredWidth(92);
+		table.setAutoCreateRowSorter(true);
 		
 		new TableMethods().loadWorkoutplanTable(table);
 		
@@ -98,6 +105,7 @@ public class TrainerView extends JFrame{
 				btnNewButton = new JButton("Trainingsplan speichern");
 				btnNewButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						
 						saveWorkoutplan();
 					}
 
@@ -179,6 +187,7 @@ public class TrainerView extends JFrame{
 	
 	
 	private void saveWorkoutplan() {
+		
 		//start date
 		byte[] bytesDay = ByteBuffer.allocate(4).putInt(Integer.parseInt((String)comboBoxYearStart.getSelectedItem())).array();
 		byte[] bytesMonth = ByteBuffer.allocate(4).putInt(Integer.parseInt((String)comboBoxMonthStart.getSelectedItem())).array();

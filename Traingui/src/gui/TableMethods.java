@@ -28,7 +28,7 @@ public class TableMethods {
 		Stage[] currStageArray;
 		Stage currStage;
 		
-		
+		outerloop:
 		for (int i = 0; i < (myPlan.getWarmupstage().length
 				/*+ myPlan.getTrainingstage().length + myPlan.getCooldownstage().length*/); i++) {
 			currStageArray = myPlan.getWarmupstage();
@@ -41,10 +41,11 @@ public class TableMethods {
 				if((int)currStage.getDay() != numberOfDays){
 					if((int)currStage.getDay() > numberOfDays){
 					System.out.print("day:"+(int)currStage.getDay());
-					numberOfDays++;
+					numberOfDays=(int) currStage.getDay();
 					break;}
 					continue;
 				}
+				
 				Set[] currSet = currStage.getSets();
 				for(int k=0;k<currSet.length;k++){
 					weights = weights+ currSet[k].getWeight();
@@ -65,7 +66,9 @@ public class TableMethods {
 				
 				
 				model.addRow(new Object[]{(int)currStage.getDay(), (int)currStage.getDeviceID(),muscleGroup , currStage.getSets().length,weights ,repeats});
-				
+				if(j==currStageArray.length-1){
+					break outerloop;
+				}
 			}
 			
 			
@@ -86,7 +89,7 @@ public class TableMethods {
 		Stage[] currStageArray;
 		Stage currStage;
 		
-		
+		outerloop:
 		for (int i = 0; i < (myPlan.getWarmupstage().length
 				/*+ myPlan.getTrainingstage().length + myPlan.getCooldownstage().length*/); i++) {
 			currStageArray = myPlan.getWarmupstage();
@@ -99,7 +102,7 @@ public class TableMethods {
 				if ((int) currStage.getDay() != numberOfDays) {
 					if ((int) currStage.getDay() > numberOfDays ) {
 						System.out.print("day:" + (int) currStage.getDay());
-						numberOfDays++;
+						numberOfDays=(int) currStage.getDay();
 						break;
 					}
 					continue;
@@ -125,7 +128,9 @@ public class TableMethods {
 				if((int)currStage.getDay() ==  day ){
 					model.addRow(new Object[]{(int)currStage.getDay(), (int)currStage.getDeviceID(),muscleGroup , currStage.getSets().length,weights ,repeats});
 				}
-				
+				if(j==currStageArray.length-1){
+					break outerloop;
+				}
 				
 			}
 			
