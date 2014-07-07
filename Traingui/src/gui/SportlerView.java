@@ -58,6 +58,7 @@ public class SportlerView extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
+		table.getTableHeader().setReorderingAllowed(false);
 		table.getColumnModel().getColumn(0).setPreferredWidth(130);
 		table.getColumnModel().getColumn(1).setPreferredWidth(46);
 		table.getColumnModel().getColumn(2).setPreferredWidth(46);

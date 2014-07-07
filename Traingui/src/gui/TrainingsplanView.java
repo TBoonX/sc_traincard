@@ -38,9 +38,10 @@ public class TrainingsplanView extends JFrame{
 						
 					},
 					new String[] {
-						"Trainingstag", "Muskelgruppe", "\u00DCbung", "S\u00E4tze", "Gewicht", "Wiederholungen"
+						"Trainingstag", "Muskelgruppe", "\u00DCbung", "S\u00E4tze", "Gewicht", "Wiederholungen", "Phase"
 					}
 				));
+				table.getTableHeader().setReorderingAllowed(false);
 				new TableMethods().loadWorkoutplanTable(table);
 				table.getColumnModel().getColumn(1).setPreferredWidth(90);
 				table.getColumnModel().getColumn(2).setPreferredWidth(130);

@@ -28,28 +28,29 @@ getContentPane().setLayout(null);
 		//		getContentPane().add(table);
 				table.setModel(new DefaultTableModel(
 					new Object[][] {
-						{"Bankdr\u00FCcken", "30kg", null, null},
-						{"Nackendr\u00FCcken", "20kg", null, null},
-						{"Latziehen", "25kg", null, null},
-						{"Rudern mit weitem Griff", "25kg", null, null},
-						{"Crosstrainer", "-", null, null},
-						{null, null, null, null},
-						{"Kniebeuge", "-", null, null},
-						{"SZ-Curls", "15kg", null, null},
-						{"enges Bankdr\u00FCcken", "15kg", null, null},
-						{"Situps", "-", null, null},
-						{"Crosstrainer", "-", null, null},
-						{null, null, null, null},
-						{"K\u00F6rpergewicht", "80kg", null, null},
+						{"Bankdr\u00FCcken", "30kg", null, null, null, null, null},
+						{"Nackendr\u00FCcken", "20kg", null, null, null, null, null},
+						{"Latziehen", "25kg", null, null, null, null, null},
+						{"Rudern mit weitem Griff", "25kg", null, null, null, null, null},
+						{"Crosstrainer", "-", null, null, null, null, null},
+						{null, null, null, null, null, null, null},
+						{"Kniebeuge", "-", null, null, null, null, null},
+						{"SZ-Curls", "15kg", null, null, null, null, null},
+						{"enges Bankdr\u00FCcken", "15kg", null, null, null, null, null},
+						{"Situps", "-", null, null, null, null, null},
+						{"Crosstrainer", "-", null, null, null, null, null},
+						{null, null, null, null, null, null, null},
+						{"K\u00F6rpergewicht", "80kg", null, null, null, null, null},
 					},
 					new String[] {
-						"\u00DCbung", "Anfangswert", "Durchschnittswert", "Bestwert"
+						"Ger\u00E4t", "best-weight", "best-repeats", "worst-weight", "worst-repeats", "last-weight", "last-repeats"
 					}
 				));
 				table.getColumnModel().getColumn(0).setPreferredWidth(130);
 				table.getColumnModel().getColumn(1).setPreferredWidth(112);
 				table.getColumnModel().getColumn(2).setPreferredWidth(122);
 				table.getColumnModel().getColumn(3).setPreferredWidth(122);
+				table.getTableHeader().setReorderingAllowed(false);
 				panel.setLayout(null);
 				
 				scrollPane = new JScrollPane(table);

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -52,37 +54,33 @@ public class TrainerView extends JFrame{
 		//		getContentPane().add(table);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{new Integer(1), new Integer(1), Constants.BANKDRUECKEN , "3", "30-20-10", "15-15-15"}
-//				,
-//				{new Integer(1), new Integer(2), Constants.BANKDRUECKEN, "3", new Integer(30), new Integer(15)},
-//				{new Integer(1), new Integer(243), Constants.BANKDRUECKEN, "3", new Integer(25), new Integer(15)},
-//				{new Integer(1), new Integer(31), Constants.BANKDRUECKEN, "3", new Integer(12), new Integer(15)},
-//				{new Integer(1), new Integer(2), Constants.BANKDRUECKEN, "1", new Integer(0), new Integer(60)},
-//				{new Integer(2), new Integer(5), Constants.BANKDRUECKEN, "3", new Integer(34), new Integer(15)},
-//				{new Integer(2), new Integer(4), Constants.BANKDRUECKEN, "3", new Integer(3), new Integer(15)},
-//				{new Integer(2), new Integer(23), Constants.BANKDRUECKEN, "3", new Integer(34), new Integer(15)},
-//				{new Integer(2), new Integer(11), Constants.BANKDRUECKEN, "3", new Integer(34), new Integer(15)},
-//				{new Integer(2), new Integer(16), Constants.BANKDRUECKEN, "1", new Integer(0), new Integer(60)},
+				{new Integer(1), new Integer(1), "Bankdr\u00FCcken", "3", "30-20-10", "15-15-15", null},
 			},
 			new String[] {
-				"Trainingstag", "Muskelgruppe", "\u00DCbung", "S\u00E4tze", "Gewicht", "Wiederholungen"
+				"Trainingstag", "Ger\u00E4t", "Muskelgruppe", "S\u00E4tze", "Gewicht", "Wiederholungen", "Phase"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Integer.class, Integer.class, Object.class, Integer.class, Object.class, Object.class
+				Integer.class, Integer.class, Object.class, Integer.class, Object.class, Object.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
+		table.getColumnModel().getColumn(1).setPreferredWidth(85);
+		table.getColumnModel().getColumn(2).setPreferredWidth(62);
+		table.getColumnModel().getColumn(4).setPreferredWidth(92);
+		table.getTableHeader().setReorderingAllowed(false);
+		TableColumn sportColumn = table.getColumnModel().getColumn(6);
+		JComboBox comboBox = new JComboBox();
+		comboBox.addItem("warm up");
+		comboBox.addItem("training");
+		comboBox.addItem("cooldown");
+		sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
 		
 		sorter = new TableRowSorter(table.getModel());
 		table.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
-		
-		table.getColumnModel().getColumn(1).setPreferredWidth(85);
-		table.getColumnModel().getColumn(2).setPreferredWidth(62);
-		table.getColumnModel().getColumn(4).setPreferredWidth(92);
 		table.setAutoCreateRowSorter(true);
 		
 		new TableMethods().loadWorkoutplanTable(table);
@@ -201,13 +199,14 @@ public class TrainerView extends JFrame{
 		Date endDate = new Date(bytesDay[3], bytesMonth[3], bytesYear[3]);
 		
 		//warmup stage
-		Stage[] warmup = new Stage[table.getRowCount()];
-		
+		Stage[] warmup = new Stage[0];
+		Stage[] train = new Stage[0];
+		Stage[] cooldown = new Stage[0];
 		for(int i= 0; i< table.getRowCount();i++){
 			
 			byte[] day = ByteBuffer.allocate(4).putInt((int)table.getValueAt(i, 0)).array();
-			byte[] deviceID = ByteBuffer.allocate(4).putInt(Constants.WORKOUTNAMES.get((String)table.getValueAt(i, 2))).array();
-			byte[] musclegroupID = ByteBuffer.allocate(4).putInt((int)table.getValueAt(i, 1)).array();
+			byte[] musclegroupID = ByteBuffer.allocate(4).putInt(Constants.WORKOUTNAMES.get((String)table.getValueAt(i, 2))).array();
+			byte[] deviceID = ByteBuffer.allocate(4).putInt((int)table.getValueAt(i, 1)).array();
 			byte[] stageID = ByteBuffer.allocate(4).putInt(i).array();
 						
 			Set[] sets = new Set[(int)table.getValueAt(i, 3)];
@@ -236,11 +235,37 @@ public class TrainerView extends JFrame{
 				
 			}
 			
-			
-			warmup[i]=new Stage(day[3], deviceID[3], sets, musclegroupID[3], stageID[3]);
+			if(((String)table.getValueAt(i, 6)).equals("warm up")){
+				System.out.println(table.getValueAt(i, 6));
+				Stage [] tmp = new Stage[(warmup.length+1)];
+				for(int k=0;k < warmup.length;k++){
+					tmp[k]=warmup[k];
+				}
+				tmp[warmup.length]=new Stage(day[3], deviceID[3], sets, musclegroupID[3], stageID[3]);
+				warmup=tmp;
+			}
+			if(((String)table.getValueAt(i, 6)).equals("training")){
+				System.out.println("train");
+				Stage [] tmp = new Stage[(train.length+1)];
+				for(int k=0;k < train.length;k++){
+					tmp[k]=train[k];
+				}
+				tmp[train.length]=new Stage(day[3], deviceID[3], sets, musclegroupID[3], stageID[3]);
+				train=tmp;
+			}
+			if(((String)table.getValueAt(i, 6)).equals("cooldown")){
+				System.out.println("cool");
+				Stage [] tmp = new Stage[(cooldown.length+1)];
+				for(int k=0;k < cooldown.length;k++){
+					tmp[k]=cooldown[k];
+				}
+				tmp[cooldown.length]=new Stage(day[3], deviceID[3], sets, musclegroupID[3], stageID[3]);
+				cooldown=tmp;
+				
+			}
 		}
 		
-		Traingui.getTraingui().setWorkoutplan(new Workoutplan(warmup, null, null, startDate, endDate));
+		Traingui.getTraingui().setWorkoutplan(new Workoutplan(warmup, train, cooldown, startDate, endDate));
 		
 	}
 	

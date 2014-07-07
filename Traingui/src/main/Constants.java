@@ -11,6 +11,8 @@ public class Constants {
 		{
 			put(BANKDRUECKEN, 1);
 			put(t, 2);
+			put("Lattziehen",3);
+			put("Laufen",4);
 		};
 
 	};
