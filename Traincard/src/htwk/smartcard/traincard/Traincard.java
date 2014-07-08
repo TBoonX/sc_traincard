@@ -25,13 +25,11 @@ public class Traincard extends Applet {
 //	instructions
 	final byte SAVEWORKOUTPLAN = (byte)0x01;
 	final byte GETWORKOUTPLAN = (byte)0x02;
-	final byte SAVEWEIGHT = (byte)0x03;
-	final byte GETWEIGHTS = (byte)0x04;
-	final byte SAVECHANGES = (byte)0x05;
-	final byte GETCHANGES = (byte)0x06;
-	final byte REGISTER = (byte)0x07;
-	final byte LOGIN = (byte)0x08;
-	final byte LOGOUT = (byte)0x09;
+	final byte SAVEPROGRESS = (byte)0x03;
+	final byte GETPROGRESS = (byte)0x04;
+	final byte REGISTER = (byte)0x05;
+	final byte LOGIN = (byte)0x06;
+	final byte LOGOUT = (byte)0x07;
 	final byte TEST = (byte)0x11;
 	final byte TEST2 = (byte)0x12;
 	
@@ -48,8 +46,7 @@ public class Traincard extends Applet {
 	boolean sportsman_loggedin = false;
 	byte[] workoutplan;
 	final byte MAXRESPONSEDATALENGTH = (byte)0xfc; 
-	byte[] weigth_history;
-	byte[] changed_exercies;
+	byte[] progress;
 	
 
 	public static void install(byte[] bArray, short bOffset, byte bLength) {
@@ -90,20 +87,12 @@ public class Traincard extends Applet {
 			output = saveWorkoutplan(buf);
 			ret_length = (short)(output.length);
 			break;
-		case SAVEWEIGHT:
-			output = saveWeight(buf);
+		case SAVEPROGRESS:
+			output = saveProgress(buf);
 			ret_length = (short)(output.length+1);
 			break;
-		case GETWEIGHTS:
-			output = getWeightHistory(buf);
-			ret_length = (short)(output.length+1);
-			break;
-		case SAVECHANGES:
-			output = saveChanges(buf);
-			ret_length = (short)(output.length+1);
-			break;
-		case GETCHANGES:
-			output = getChanges(buf);
+		case GETPROGRESS:
+			output = getProgress(buf);
 			ret_length = (short)(output.length+1);
 			break;
 		case TEST:
@@ -177,7 +166,7 @@ public class Traincard extends Applet {
 	 * @return
 	 */
 	private byte[] register(byte[] buffer) {
-		byte length = buffer[LENGTH];
+		short length = (short)(buffer[LENGTH] & 0xff);
 		byte kind = buffer[DATA];
 		
 		byte[] errorbytes = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT );
@@ -223,7 +212,7 @@ public class Traincard extends Applet {
 	 * @return
 	 */
 	private byte[] login(byte[] buffer, boolean login) {
-		byte length = buffer[LENGTH];
+		short length = (short)(buffer[LENGTH] & 0xff);
 		byte kind = buffer[DATA];
 		
 		byte[] errorbytes = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT );
@@ -341,7 +330,7 @@ public class Traincard extends Applet {
 	 */
 	private byte[] saveWorkoutplan(byte[] buffer) {
 		byte countOfApdus = buffer[NOA]; 	//01
-		byte length = buffer[LENGTH];		//6b
+		short length = (short)(buffer[LENGTH] & 0xff);		//6b
 		byte apduNumber = buffer[DATA];		//01
 		boolean firstApdu = apduNumber == (byte)0x01 ? true : false;
 		
@@ -375,20 +364,94 @@ public class Traincard extends Applet {
 		return new byte[]{0x01, 0x01, 0x01};
 	}
 	
-	private byte[] saveWeight(byte[] buffer) {
-		return buffer;
+	/**
+	 * Save the given Progress array
+	 * 
+	 * data bytes should include the number of the apdu and after that byte all bytes of the progress
+	 * 
+	 * return just the success byte
+	 * 
+	 * example send:
+	 * /send 80 03 01 00 00
+	 * @param buffer
+	 * @return
+	 */
+	private byte[] saveProgress(byte[] buffer) {
+		byte countOfApdus = buffer[NOA];
+		short length = (short)(buffer[LENGTH] & 0xff);
+		byte apduNumber = buffer[DATA];
+		boolean firstApdu = apduNumber == (byte)0x01 ? true : false;
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+//		if (!sportsman_loggedin)
+//			return errorbytes;
+		
+		if (firstApdu) {
+			//create bytearray which holds the progress array
+			progress = new byte[length-1];
+			Util.arrayCopy(buffer, (short)(DATA+1), progress, (short)0, (short)(length-1));
+			
+			return new byte[]{0x01, 0x01, 0x01};
+		}
+		
+		//!firstApdu
+		//save head in transient array
+		byte[] temp = JCSystem.makeTransientByteArray((short)progress.length, JCSystem.CLEAR_ON_DESELECT );
+		Util.arrayCopy(progress, (short)0, temp, (short)0, (short)progress.length);
+		//progress is now bigger
+		progress = new byte[temp.length+length-1];
+		//copy head
+		Util.arrayCopy(temp, (short)0, progress, (short)0, (short)temp.length);
+		//copy tail
+		Util.arrayCopy(buffer, (short)(DATA+1), progress, (short)0, (short)(length-1));
+		
+		return new byte[]{0x01, 0x01, 0x01};
 	}
 	
-	private byte[] getWeightHistory(byte[] buffer) {
-		return buffer;
-	}
-	
-	private byte[] saveChanges(byte[] buffer) {
-		return buffer;
-	}
-	
-	private byte[] getChanges(byte[] buffer) {
-		return buffer;
+	private byte[] getProgress(byte[] buffer) {
+		byte apduNumber = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+		if (apduNumber < 1 || progress == null || progress.length < 3)
+			return errorbytes;
+		
+		//calculate needed amount of apdus and the range which should returned
+		byte mod = (byte)(progress.length % (MAXRESPONSEDATALENGTH & 0xff));
+		byte mod_ = (byte)((mod & 0xff) == 0 ? 0 : 1);
+		byte apduAmount = (byte)1;
+		if (progress.length-(mod & 0xff) > 0)//no division with zero
+			apduAmount = (byte)(((progress.length-(mod & 0xff))/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
+		
+		//create ret array which contains the part of the workoutplan
+		byte retLength = (byte)(MAXRESPONSEDATALENGTH & 0xff);
+		if (apduAmount == 1)
+			retLength = (byte)progress.length;
+		else if (apduAmount == apduNumber)
+			retLength = mod;
+		retLength += (byte)3;	//for NoA, LEN und apduNumber
+		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
+		
+		//copy the part
+		short startIndex = (short)((apduNumber-1)*(MAXRESPONSEDATALENGTH & 0xff));
+		if (startIndex > progress.length)
+			return errorbytes;
+		Util.arrayCopy(progress, startIndex, ret, (short)3, (short)(retLength-3));
+		
+		//set header
+		ret[0] = apduAmount;
+		ret[1] = (byte)(ret.length-2);
+		ret[2] = apduNumber;
+		
+		
+		return ret;
 	}
 
 	public void deselect() {
