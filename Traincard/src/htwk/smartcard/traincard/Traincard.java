@@ -38,14 +38,16 @@ public class Traincard extends Applet {
 	short ret_length = 0;
 	
 //	data
-	byte[] password_trainer;
-	byte[] password_sportsman;
+	//sc14Trainer
+	byte[] password_trainer = new byte[]{(byte)0x04, (byte)0xB6, (byte)0x3D, (byte)0xD6, (byte)0x08, (byte)0xE2, (byte)0x3F, (byte)0x05, (byte)0x2E, (byte)0xFF, (byte)0xC1, (byte)0x8C, (byte)0x8A, (byte)0x3B, (byte)0x10, (byte)0x97, (byte)0x8B, (byte)0xC3, (byte)0x5A, (byte)0x27, (byte)0x9D, (byte)0xDB, (byte)0x9A, (byte)0xF6, (byte)0x5F, (byte)0x54, (byte)0xBF, (byte)0x54, (byte)0xC3, (byte)0xB4, (byte)0x60, (byte)0x44};
+	//sc14Sportler
+	byte[] password_sportsman = new byte[]{(byte)0x5C, (byte)0xA1, (byte)0xA3, (byte)0x4A, (byte)0x74, (byte)0xF9, (byte)0xE1, (byte)0xCC, (byte)0xF4, (byte)0xEE, (byte)0x2E, (byte)0x09, (byte)0xA9, (byte)0x33, (byte)0xC8, (byte)0x20, (byte)0xB4, (byte)0xF7, (byte)0xF5, (byte)0x32, (byte)0xDC, (byte)0x99, (byte)0x01, (byte)0x19, (byte)0x18, (byte)0x6F, (byte)0x16, (byte)0xF2, (byte)0x03, (byte)0xDF, (byte)0x5D, (byte)0x6B};
 	final byte TRAINER = (byte)0x01;
 	final byte SPORTSMAN = (byte)0x02;
 	boolean trainer_loggedin = false;
 	boolean sportsman_loggedin = false;
 	byte[] workoutplan;
-	final byte MAXRESPONSEDATALENGTH = (byte)253; 
+	final byte MAXRESPONSEDATALENGTH = (byte)0xfc; 
 	byte[] weigth_history;
 	byte[] changed_exercies;
 	
@@ -82,11 +84,11 @@ public class Traincard extends Applet {
 			break;
 		case GETWORKOUTPLAN:
 			output = getWorkoutplan(buf);
-			ret_length = (short)(output.length+1);
+			ret_length = (short)(output.length);
 			break;
 		case SAVEWORKOUTPLAN:
 			output = saveWorkoutplan(buf);
-			ret_length = (short)(output.length+1);
+			ret_length = (short)(output.length);
 			break;
 		case SAVEWEIGHT:
 			output = saveWeight(buf);
@@ -274,6 +276,9 @@ public class Traincard extends Applet {
 	 * 
 	 * return count of all apdus, length of data, the current apdu number and the part of the workplan
 	 * 
+	 * example send:
+	 * /send 80 02 01 01 01
+	 * 
 	 * @param buffer
 	 * @return
 	 */
@@ -289,14 +294,14 @@ public class Traincard extends Applet {
 			return errorbytes;
 		
 		//calculate needed amount of apdus and the range which should returned
-		byte mod = (byte)(workoutplan.length % MAXRESPONSEDATALENGTH);
-		byte mod_ = (byte)(mod == 0 ? 0 : 1);
+		byte mod = (byte)(workoutplan.length % (MAXRESPONSEDATALENGTH & 0xff));
+		byte mod_ = (byte)((mod & 0xff) == 0 ? 0 : 1);
 		byte apduAmount = (byte)1;
-		if (workoutplan.length-mod > 0)//no division with zero
-			apduAmount = (byte)(((workoutplan.length-mod)/MAXRESPONSEDATALENGTH)+mod_);
+		if (workoutplan.length-(mod & 0xff) > 0)//no division with zero
+			apduAmount = (byte)(((workoutplan.length-(mod & 0xff))/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
 		
 		//create ret array which contains the part of the workoutplan
-		byte retLength = MAXRESPONSEDATALENGTH;
+		byte retLength = (byte)(MAXRESPONSEDATALENGTH & 0xff);
 		if (apduAmount == 1)
 			retLength = (byte)workoutplan.length;
 		else if (apduAmount == apduNumber)
@@ -305,14 +310,14 @@ public class Traincard extends Applet {
 		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
 		
 		//copy the part
-		short startIndex = (short)((apduNumber-1)*MAXRESPONSEDATALENGTH);
+		short startIndex = (short)((apduNumber-1)*(MAXRESPONSEDATALENGTH & 0xff));
 		if (startIndex > workoutplan.length)
 			return errorbytes;
 		Util.arrayCopy(workoutplan, startIndex, ret, (short)3, (short)(retLength-3));
 		
 		//set header
 		ret[0] = apduAmount;
-		ret[1] = (byte)(ret.length+1);
+		ret[1] = (byte)(ret.length-2);
 		ret[2] = apduNumber;
 		
 		
@@ -328,22 +333,25 @@ public class Traincard extends Applet {
 	 * 
 	 * example of workpoutplan
 	 * 0400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
+	 * 
+	 * example send:
+	 * /send 80 01 01 6b 010400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
 	 * @param buffer
 	 * @return
 	 */
 	private byte[] saveWorkoutplan(byte[] buffer) {
-		byte countOfApdus = buffer[NOA]; 
-		byte length = buffer[LENGTH];
-		byte apduNumber = buffer[DATA];
-		boolean firstApdu = apduNumber == 0x01 ? true : false;
+		byte countOfApdus = buffer[NOA]; 	//01
+		byte length = buffer[LENGTH];		//6b
+		byte apduNumber = buffer[DATA];		//01
+		boolean firstApdu = apduNumber == (byte)0x01 ? true : false;
 		
 		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
 		errorbytes[0] = 0x01;
 		errorbytes[1] = 0x01;
 		errorbytes[2] = 0x00;
 		
-		if (!trainer_loggedin)
-			return errorbytes;
+//		if (!trainer_loggedin)
+//			return errorbytes;
 		
 		if (firstApdu) {
 			//create bytearray which holds the workoutplan
