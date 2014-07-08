@@ -4,25 +4,48 @@ import javacard.framework.APDU;
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
+import javacard.framework.Util;
+import javacard.framework.JCSystem;
 
+/**
+ * 
+ * @author Kurt
+ * packagename: smartcard
+ * appletname: Traincard
+ * http://de.wikipedia.org/wiki/Application_Protocol_Data_Unit
+ */
 public class Traincard extends Applet {
 	
-	//instructions
+//	offsets
+	final byte NOA = 0x02;	//Number of APDUs
+	final byte LENGTH = 0x03;	//count of bytes beeing send with the request
+	final byte DATA = 0x04;	//Start data byte
+	
+
+//	instructions
 	final byte SAVEWORKOUTPLAN = (byte)0x01;
 	final byte GETWORKOUTPLAN = (byte)0x02;
 	final byte SAVEWEIGHT = (byte)0x03;
 	final byte GETWEIGHTS = (byte)0x04;
 	final byte SAVECHANGES = (byte)0x05;
 	final byte GETCHANGES = (byte)0x06;
+	final byte REGISTER = (byte)0x07;
+	final byte LOGIN = (byte)0x08;
+	final byte LOGOUT = (byte)0x09;
+	final byte TEST = (byte)0x11;
+	final byte TEST2 = (byte)0x12;
 	
 	short ret_length = 0;
 	
-	//data
+//	data
 	byte[] password_trainer;
 	byte[] password_sportsman;
 	final byte TRAINER = (byte)0x01;
-	final byte SPORTSMAN = (byte)0x01;
-	byte[] workoutplans;
+	final byte SPORTSMAN = (byte)0x02;
+	boolean trainer_loggedin = false;
+	boolean sportsman_loggedin = false;
+	byte[] workoutplan;
+	final byte MAXRESPONSEDATALENGTH = (byte)253; 
 	byte[] weigth_history;
 	byte[] changed_exercies;
 	
@@ -42,57 +65,306 @@ public class Traincard extends Applet {
 		byte[] buf = apdu.getBuffer();
 	    byte instruction = buf[ISO7816.OFFSET_INS];
 
-	    apdu.setOutgoing();
+	    byte[] output = null;
+	    
 		switch (instruction) {
+		case REGISTER:
+			output = register(buf);
+			ret_length = (short)(output.length);
+			break;
+		case LOGIN:
+			output = login(buf, true);
+			ret_length = (short)(output.length);
+			break;
+		case LOGOUT:
+			output = login(buf, false);
+			ret_length = (short)(output.length);
+			break;
 		case GETWORKOUTPLAN:
-			byte[] ret = getWorkoutplan(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = getWorkoutplan(buf);
+			ret_length = (short)(output.length+1);
 			break;
 		case SAVEWORKOUTPLAN:
-			byte[] ret2 = saveWorkoutplan(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = saveWorkoutplan(buf);
+			ret_length = (short)(output.length+1);
 			break;
 		case SAVEWEIGHT:
-			byte[] ret3 = saveWeight(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = saveWeight(buf);
+			ret_length = (short)(output.length+1);
 			break;
 		case GETWEIGHTS:
-			byte[] ret4 = getWeightHistory(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = getWeightHistory(buf);
+			ret_length = (short)(output.length+1);
 			break;
 		case SAVECHANGES:
-			byte[] ret5 = saveChanges(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = saveChanges(buf);
+			ret_length = (short)(output.length+1);
 			break;
 		case GETCHANGES:
-			byte[] ret6 = getChanges(buf);
-			
-            apdu.setOutgoingLength(ret_length);
-            apdu.sendBytes((short)0,ret_length);
+			output = getChanges(buf);
+			ret_length = (short)(output.length+1);
 			break;
+		case TEST:
+			byte[] ret7 = null;
+			ret7 = test(buf);
+			override(buf, ret7);
+			
+			apdu.setOutgoingAndSend((short)0, (short)106);
+			
+            ISOException.throwIt(ISO7816.SW_NO_ERROR);
+			break;
+		case TEST2:
+			short l = 256;
+			byte[] big = new byte[l];
+			override(buf, big);
+			apdu.setOutgoingAndSend((short)0, l);
+			return;
+			//break;
 		
 		default:
 			// good practice: If you don't know the INStruction, say so:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}
+		
+		override(buf, output);
+		apdu.setOutgoingAndSend((short)0, ret_length);
+		ISOException.throwIt(ISO7816.SW_NO_ERROR);
 	}
 	
+	private void override(byte[] buffer, byte[] data) {
+		Util.arrayCopy(data, (short)0, buffer, (short)0, (short)data.length);
+	}
+	
+	private byte[] test(byte[] buffer) {
+		Set[] sets = new Set[2];
+		sets[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
+		sets[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
+		Stage stage1 = new Stage((byte)0x01, (byte)0x0f, sets, (byte)0x33, (byte)0x01);//19 byte
+		
+		Set[] sets2 = new Set[3];
+		sets2[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
+		sets2[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
+		sets2[2] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
+		Stage stage2 = new Stage((byte)0x01, (byte)0x10, sets2, (byte)0x2b, (byte)0x01);//25 bytes
+		
+		Stage[] allStages = new Stage[2];	//44 bytes
+		allStages[0] = stage1;
+		allStages[1] = stage2;
+		Stage[] fs = new Stage[1];
+		fs[0] = stage1;
+		Stage[] ss = new Stage[1];
+		ss[0] = stage2;
+		
+		Date now = new Date((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
+		Date othernow = new Date((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
+		
+		Workoutplan that = new Workoutplan(fs, allStages, ss, now, othernow);	//3+12+3+19+25+44 bytes
+		
+		return that.toBytes();
+	}
+	
+	/**
+	 * Register a person
+	 * 
+	 * data bytes should include kind byte and password bytes
+	 * example: /send 80 07 01 04 01 0a 0b 0c
+	 * 
+	 * returned bytes include kind byte and success byte
+	 * 
+	 * @param buffer
+	 * @return
+	 */
+	private byte[] register(byte[] buffer) {
+		byte length = buffer[LENGTH];
+		byte kind = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x02;
+		errorbytes[2] = kind;
+		errorbytes[3] = 0x00;
+		
+		
+		switch (kind) {
+		case TRAINER:
+			if (null != password_trainer || length < 2) {
+				return errorbytes;
+			}
+			
+			password_trainer = new byte[length-1];
+			Util.arrayCopy(buffer, (short)(DATA+1), password_trainer, (short)0, (short)(length-1));
+			break;
+		case SPORTSMAN:
+			if (null != password_sportsman || length < 2) {
+				return errorbytes;
+			}
+			
+			password_sportsman = new byte[length-1];
+			Util.arrayCopy(buffer, (short)(DATA+1), password_sportsman, (short)0, (short)(length-1));
+			break;
+		default:
+			return errorbytes;
+		}
+		
+		return new byte[]{0x01, 0x02, kind, (byte)0x01};
+	}
+	
+	/**
+	 * login or logout the given user with the given password
+	 * 
+	 * data bytes should include kind byte and password bytes
+	 * example: /send 80 08 01 04 01 0a 0b 0c
+	 * 
+	 * returned bytes include kind byte and success byte
+	 * 
+	 * @param buffer
+	 * @return
+	 */
+	private byte[] login(byte[] buffer, boolean login) {
+		byte length = buffer[LENGTH];
+		byte kind = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)4, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x02;
+		errorbytes[2] = kind;
+		errorbytes[3] = 0x00;
+		
+		switch (kind) {
+		case TRAINER:
+			if (null == password_trainer || length-1 != password_trainer.length) {
+				return errorbytes;
+			}
+			
+			if (!login && !trainer_loggedin)
+				return errorbytes;
+			
+			if (0 != Util.arrayCompare(password_trainer, (short)0, buffer, (short)(DATA+1), (short)(length-1)))
+				return errorbytes;
+			
+			trainer_loggedin = login;
+			
+			break;
+		case SPORTSMAN:
+			if (null == password_sportsman || length-1 != password_sportsman.length) {
+				return errorbytes;
+			}
+			
+			if (!login && !sportsman_loggedin)
+				return errorbytes;
+			
+			if (0 != Util.arrayCompare(password_sportsman, (short)0, buffer, (short)(DATA+1), (short)(length-1)))
+				return errorbytes;
+			
+			sportsman_loggedin = login;
+			
+			break;
+		default:
+			return errorbytes;
+		}
+		
+		return new byte[]{0x01, 0x02, kind, (byte)0x01};
+	}
+	
+	/**
+	 * get workoutplan
+	 * sometimes more than one apdus neccessary
+	 * 
+	 * data bytes should include the needed number of apdu
+	 * 
+	 * return count of all apdus, length of data, the current apdu number and the part of the workplan
+	 * 
+	 * @param buffer
+	 * @return
+	 */
 	private byte[] getWorkoutplan(byte[] buffer) {
-		return buffer;
+		byte apduNumber = buffer[DATA];
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+		if (apduNumber < 1 || workoutplan == null || workoutplan.length < 3)
+			return errorbytes;
+		
+		//calculate needed amount of apdus and the range which should returned
+		byte mod = (byte)(workoutplan.length % MAXRESPONSEDATALENGTH);
+		byte mod_ = (byte)(mod == 0 ? 0 : 1);
+		byte apduAmount = (byte)1;
+		if (workoutplan.length-mod > 0)//no division with zero
+			apduAmount = (byte)(((workoutplan.length-mod)/MAXRESPONSEDATALENGTH)+mod_);
+		
+		//create ret array which contains the part of the workoutplan
+		byte retLength = MAXRESPONSEDATALENGTH;
+		if (apduAmount == 1)
+			retLength = (byte)workoutplan.length;
+		else if (apduAmount == apduNumber)
+			retLength = mod;
+		retLength += (byte)3;	//for NoA, LEN und apduNumber
+		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
+		
+		//copy the part
+		short startIndex = (short)((apduNumber-1)*MAXRESPONSEDATALENGTH);
+		if (startIndex > workoutplan.length)
+			return errorbytes;
+		Util.arrayCopy(workoutplan, startIndex, ret, (short)3, (short)(retLength-3));
+		
+		//set header
+		ret[0] = apduAmount;
+		ret[1] = (byte)(ret.length+1);
+		ret[2] = apduNumber;
+		
+		
+		return ret;
 	}
 	
+	/**
+	 * Save the given workoutplan
+	 * 
+	 * data bytes should include the number of the apdu and after that byte all bytes of the workoutplan
+	 * 
+	 * return just the success byte
+	 * 
+	 * example of workpoutplan
+	 * 0400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
+	 * @param buffer
+	 * @return
+	 */
 	private byte[] saveWorkoutplan(byte[] buffer) {
-		return buffer;
+		byte countOfApdus = buffer[NOA]; 
+		byte length = buffer[LENGTH];
+		byte apduNumber = buffer[DATA];
+		boolean firstApdu = apduNumber == 0x01 ? true : false;
+		
+		byte[] errorbytes = JCSystem.makeTransientByteArray((short)3, JCSystem.CLEAR_ON_DESELECT );
+		errorbytes[0] = 0x01;
+		errorbytes[1] = 0x01;
+		errorbytes[2] = 0x00;
+		
+		if (!trainer_loggedin)
+			return errorbytes;
+		
+		if (firstApdu) {
+			//create bytearray which holds the workoutplan
+			workoutplan = new byte[length-1];
+			Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)0, (short)(length-1));
+			
+			return new byte[]{0x01, 0x01, 0x01};
+		}
+		
+		//!firstApdu
+		//save head in transient array
+		byte[] temp = JCSystem.makeTransientByteArray((short)workoutplan.length, JCSystem.CLEAR_ON_DESELECT );
+		Util.arrayCopy(workoutplan, (short)0, temp, (short)0, (short)workoutplan.length);
+		//workoutplan is now bigger
+		workoutplan = new byte[temp.length+length-1];
+		//copy head
+		Util.arrayCopy(temp, (short)0, workoutplan, (short)0, (short)temp.length);
+		//copy tail
+		Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)0, (short)(length-1));
+		
+		return new byte[]{0x01, 0x01, 0x01};
 	}
 	
 	private byte[] saveWeight(byte[] buffer) {
@@ -116,4 +388,5 @@ public class Traincard extends Applet {
 		
 		//TODO: save data persistent
 	}
+
 }
