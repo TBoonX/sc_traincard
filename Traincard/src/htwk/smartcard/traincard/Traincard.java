@@ -17,9 +17,9 @@ import javacard.framework.JCSystem;
 public class Traincard extends Applet {
 	
 //	offsets
-	final byte NOA = 0x02;	//Number of APDUs
+	final byte NOA = 0x02;		//Number of APDUs
 	final byte LENGTH = 0x03;	//count of bytes beeing send with the request
-	final byte DATA = 0x04;	//Start data byte
+	final byte DATA = 0x04;		//Start data byte
 	
 
 //	instructions
@@ -40,13 +40,18 @@ public class Traincard extends Applet {
 	byte[] password_trainer = new byte[]{(byte)0x04, (byte)0xB6, (byte)0x3D, (byte)0xD6, (byte)0x08, (byte)0xE2, (byte)0x3F, (byte)0x05, (byte)0x2E, (byte)0xFF, (byte)0xC1, (byte)0x8C, (byte)0x8A, (byte)0x3B, (byte)0x10, (byte)0x97, (byte)0x8B, (byte)0xC3, (byte)0x5A, (byte)0x27, (byte)0x9D, (byte)0xDB, (byte)0x9A, (byte)0xF6, (byte)0x5F, (byte)0x54, (byte)0xBF, (byte)0x54, (byte)0xC3, (byte)0xB4, (byte)0x60, (byte)0x44};
 	//sc14Sportler
 	byte[] password_sportsman = new byte[]{(byte)0x5C, (byte)0xA1, (byte)0xA3, (byte)0x4A, (byte)0x74, (byte)0xF9, (byte)0xE1, (byte)0xCC, (byte)0xF4, (byte)0xEE, (byte)0x2E, (byte)0x09, (byte)0xA9, (byte)0x33, (byte)0xC8, (byte)0x20, (byte)0xB4, (byte)0xF7, (byte)0xF5, (byte)0x32, (byte)0xDC, (byte)0x99, (byte)0x01, (byte)0x19, (byte)0x18, (byte)0x6F, (byte)0x16, (byte)0xF2, (byte)0x03, (byte)0xDF, (byte)0x5D, (byte)0x6B};
+	//identifier for roles
 	final byte TRAINER = (byte)0x01;
 	final byte SPORTSMAN = (byte)0x02;
+	//login states
 	boolean trainer_loggedin = false;
 	boolean sportsman_loggedin = false;
+	//byte representation of a workoutplan 
 	byte[] workoutplan;
-	final byte MAXRESPONSEDATALENGTH = (byte)0xfc; 
+	//byte representation of progress array
 	byte[] progress;
+	//maximal length of data for send/recive data
+	final byte MAXRESPONSEDATALENGTH = (byte)0xfc; 
 	
 
 	public static void install(byte[] bArray, short bOffset, byte bLength) {
@@ -104,7 +109,7 @@ public class Traincard extends Applet {
 			
             ISOException.throwIt(ISO7816.SW_NO_ERROR);
 			break;
-		case TEST2:
+		case TEST2:	//80 12 01 00
 			short l = 256;
 			byte[] big = new byte[l];
 			override(buf, big);
