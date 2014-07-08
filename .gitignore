@@ -15,9 +15,14 @@ hs_err_pid*
 
 # latex
 *.aux
-*.log
-*.out
 *.gz
+*.lof
+*.log
+*.lot
+*.out
+*.synctex
+*.toc
+
 
 # jcop
 .classpath
