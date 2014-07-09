@@ -4,7 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import model.Date;
+import model.MyDate;
+import model.Progress;
+import model.ProgressElement;
 import model.Set;
 import model.Stage;
 import model.Workoutplan;
@@ -15,6 +17,10 @@ public class CardInterface {
 	static final byte MAXRESPONSEDATALENGTH = (byte)0xfc;
 	
 	public static void main(String[] args) {
+		testP();
+	}
+	
+	private static void testWP() {
 		System.out.println("start writing workoutplan...");
 		
 		//create workoutplan
@@ -27,6 +33,34 @@ public class CardInterface {
 			
 			System.out.println("Workoutplan recived!");
 		}
+	}
+	
+	private static void testP() {
+		System.out.println("start writing progress...");
+		
+		//create workoutplan
+		Progress[] ps = createPs();
+		
+		boolean success = saveProgress(ps);
+		
+		if (success) {
+			Progress[] ps2 = getProgress();
+			
+			System.out.println("Progress recived!");
+		}
+	}
+	
+	private static Progress[] createPs() {
+		MyDate date = new MyDate((byte)0x0b, (byte)0x07, (byte)0x05);
+		ProgressElement last = new ProgressElement((byte)0x24,(byte)0x0a, date);
+		ProgressElement best = new ProgressElement((byte)0x26,(byte)0x0a, date);
+		ProgressElement worst = new ProgressElement((byte)0x2f,(byte)0x08, date);
+		
+		Progress that1 = new Progress((byte)0x01, last, last, last);
+		Progress that2 = new Progress((byte)0x02, best, best, worst);
+		Progress that3 = new Progress((byte)0x03, worst, best, worst);
+		
+		return new Progress[]{that1, that2, that3};
 	}
 	
 	private static Workoutplan createWP() {
@@ -49,8 +83,8 @@ public class CardInterface {
 		Stage[] ss = new Stage[1];
 		ss[0] = stage2;
 		
-		Date now = new Date((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		Date othernow = new Date((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
+		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
+		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
 		
 		Workoutplan ret = new Workoutplan(fs, allStages, ss, now, othernow);
 		
@@ -91,8 +125,8 @@ public class CardInterface {
 		Stage cooldownstage = new Stage((byte)0x01, (byte)0x01, new Set[]{cooldownset, warmupset}, (byte)0x00, (byte)0x06);
 		
 		
-		Date now = new Date((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		Date othernow = new Date((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
+		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
+		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
 		
 		Workoutplan ret = new Workoutplan(new Stage[]{warmupstage, stage1}, new Stage[]{stage1, stage2, warmupstage, stage3, cooldownstage, stage4}, new Stage[]{warmupstage, cooldownstage}, now, othernow);
 		
@@ -246,6 +280,110 @@ public class CardInterface {
 		}
 		
 		Workoutplan ret = Workoutplan.fromBytes(wpbytes);
+		
+		return ret;
+	}
+	
+	public static boolean saveProgress(Progress[] ps) {
+		byte[] bytes = new byte[37*ps.length];
+		//copy elements
+		for (short i = 0; i < ps.length; i++) {
+			System.arraycopy(ps[i].toBytes(), 0, bytes, (i-1)*37, 37);
+		}
+		
+		//calculate needed amount of apdus and the range which should returned
+		short mod = (short)(bytes.length % (MAXRESPONSEDATALENGTH & 0xff));
+		byte mod_ = (byte)(mod == 0 ? 0 : 1);
+		byte apduAmount = (byte)1;
+		if (bytes.length-mod > 0)//no division with zero
+			apduAmount = (byte)(((bytes.length-mod)/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
+		
+		//create ret array which contains the part of the workoutplan
+		short datalength = (short)(MAXRESPONSEDATALENGTH & 0xff);
+		if (apduAmount == 1)
+			datalength = (byte)bytes.length;
+		
+		for (short i = 1; i <= apduAmount; i++) {
+			
+			if (apduAmount == i)
+				datalength = mod;
+			
+			byte[] instructions = new byte[]{(byte)0x00, 0x03, apduAmount, (byte)(datalength+1), (byte)i };
+			
+			byte[] data = new byte[datalength];
+			System.arraycopy(bytes, (MAXRESPONSEDATALENGTH & 0xff)*(i-1), data, 0, datalength);
+			
+			System.out.println("!!! Send data: "+getHex(instructions)+getHex(data));
+			
+			byte[] response = send(instructions, data);
+			
+			if (response == null)
+				return false;
+			
+			if (response[2] != 0x01)
+				return false;
+		}
+		
+		
+		return true;
+	}
+	
+	public static Progress[] getProgress() {
+		byte[] instructions = new byte[]{(byte)0x00, 0x04 , 0x01, 0x01 };
+		byte[] data = new byte[1];
+		data[0] = 0x01;
+		
+		byte[] response = send(instructions, data);
+		
+		if (response == null)
+			return null;
+		
+		short apduAmount = (short)(response[0] & 0xff);
+		short apduNumber = (short)(response[2] & 0xff);
+		short dataLength = (short)(response[1] & 0xff);
+		
+		if (apduAmount < 1 || apduNumber < 1)
+			return null;
+		
+		byte[] pbytes = new byte[dataLength-1];
+		System.arraycopy(response, 3, pbytes, 0, dataLength-1);
+		
+		for (short i = 2; i <= apduAmount; i++) {
+			data[0] = (byte)(i & 0xff);
+			
+			response = send(instructions, data);
+			
+			if (response == null)
+				return null;
+			
+			apduAmount = (short)(response[0] & 0xff);
+			apduNumber = (short)(response[2] & 0xff);
+			dataLength = (short)(response[1] & 0xff);
+			
+			if (apduAmount < 1 || apduNumber < 1)
+				return null;
+			
+			//save old bytes
+			byte[] temp = new byte[pbytes.length];
+			System.arraycopy(pbytes, 0, temp, 0, pbytes.length);
+			
+			pbytes = new byte[temp.length+dataLength-1];
+			System.arraycopy(temp, 0, pbytes, 0, temp.length);
+			System.arraycopy(response, 3, pbytes, temp.length, dataLength-1);
+		}
+		
+		Progress[] ret = new Progress[pbytes.length/37];
+		
+		try {
+			for (short i = 0; i < pbytes.length/37; i++) {
+				byte[] temp = new byte[37];
+				System.arraycopy(pbytes, (i)*37, temp, 0, 37);
+				ret[i] = Progress.fromBytes(temp);
+			}
+		} catch (IndexOutOfBoundsException ioobe) {
+			ioobe.printStackTrace();
+			return null;
+		}
 		
 		return ret;
 	}

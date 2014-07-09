@@ -1,4 +1,5 @@
 .directory
+Traincard/bin/
 
 *.class
 
@@ -24,6 +25,8 @@ hs_err_pid*
 *.out
 *.synctex
 *.toc
+*.bbl
+*.blg
 
 
 # jcop
