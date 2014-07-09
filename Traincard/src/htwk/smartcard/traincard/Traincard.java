@@ -36,7 +36,7 @@ public class Traincard extends Applet {
 	short ret_length = 0;
 	
 //	data
-	//sc14Trainer
+//	sc14Trainer
 	byte[] password_trainer = new byte[]{(byte)0x04, (byte)0xB6, (byte)0x3D, (byte)0xD6, (byte)0x08, (byte)0xE2, (byte)0x3F, (byte)0x05, (byte)0x2E, (byte)0xFF, (byte)0xC1, (byte)0x8C, (byte)0x8A, (byte)0x3B, (byte)0x10, (byte)0x97, (byte)0x8B, (byte)0xC3, (byte)0x5A, (byte)0x27, (byte)0x9D, (byte)0xDB, (byte)0x9A, (byte)0xF6, (byte)0x5F, (byte)0x54, (byte)0xBF, (byte)0x54, (byte)0xC3, (byte)0xB4, (byte)0x60, (byte)0x44};
 	//sc14Sportler
 	byte[] password_sportsman = new byte[]{(byte)0x5C, (byte)0xA1, (byte)0xA3, (byte)0x4A, (byte)0x74, (byte)0xF9, (byte)0xE1, (byte)0xCC, (byte)0xF4, (byte)0xEE, (byte)0x2E, (byte)0x09, (byte)0xA9, (byte)0x33, (byte)0xC8, (byte)0x20, (byte)0xB4, (byte)0xF7, (byte)0xF5, (byte)0x32, (byte)0xDC, (byte)0x99, (byte)0x01, (byte)0x19, (byte)0x18, (byte)0x6F, (byte)0x16, (byte)0xF2, (byte)0x03, (byte)0xDF, (byte)0x5D, (byte)0x6B};
@@ -109,7 +109,7 @@ public class Traincard extends Applet {
 			
             ISOException.throwIt(ISO7816.SW_NO_ERROR);
 			break;
-		case TEST2:	//80 12 01 00
+		case TEST2:
 			short l = 256;
 			byte[] big = new byte[l];
 			override(buf, big);
@@ -288,19 +288,19 @@ public class Traincard extends Applet {
 			return errorbytes;
 		
 		//calculate needed amount of apdus and the range which should returned
-		byte mod = (byte)(workoutplan.length % (MAXRESPONSEDATALENGTH & 0xff));
+		short mod = (short)(workoutplan.length % (MAXRESPONSEDATALENGTH & 0xff));
 		byte mod_ = (byte)((mod & 0xff) == 0 ? 0 : 1);
 		byte apduAmount = (byte)1;
-		if (workoutplan.length-(mod & 0xff) > 0)//no division with zero
-			apduAmount = (byte)(((workoutplan.length-(mod & 0xff))/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
+		if (workoutplan.length-mod > 0)//no division with zero
+			apduAmount = (byte)(((workoutplan.length-mod)/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
 		
 		//create ret array which contains the part of the workoutplan
-		byte retLength = (byte)(MAXRESPONSEDATALENGTH & 0xff);
+		short retLength = (MAXRESPONSEDATALENGTH & 0xff);
 		if (apduAmount == 1)
-			retLength = (byte)workoutplan.length;
+			retLength = (short)workoutplan.length;
 		else if (apduAmount == apduNumber)
 			retLength = mod;
-		retLength += (byte)3;	//for NoA, LEN und apduNumber
+		retLength += (short)3;	//for NoA, LEN und apduNumber
 		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
 		
 		//copy the part
@@ -344,8 +344,8 @@ public class Traincard extends Applet {
 		errorbytes[1] = 0x01;
 		errorbytes[2] = 0x00;
 		
-//		if (!trainer_loggedin)
-//			return errorbytes;
+		if (!trainer_loggedin)
+			return errorbytes;
 		
 		if (firstApdu) {
 			//create bytearray which holds the workoutplan
@@ -364,7 +364,7 @@ public class Traincard extends Applet {
 		//copy head
 		Util.arrayCopy(temp, (short)0, workoutplan, (short)0, (short)temp.length);
 		//copy tail
-		Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)0, (short)(length-1));
+		Util.arrayCopy(buffer, (short)(DATA+1), workoutplan, (short)temp.length, (short)(length-1));
 		
 		return new byte[]{0x01, 0x01, 0x01};
 	}
@@ -392,8 +392,8 @@ public class Traincard extends Applet {
 		errorbytes[1] = 0x01;
 		errorbytes[2] = 0x00;
 		
-//		if (!sportsman_loggedin)
-//			return errorbytes;
+		if (!sportsman_loggedin)
+			return errorbytes;
 		
 		if (firstApdu) {
 			//create bytearray which holds the progress array
@@ -412,7 +412,7 @@ public class Traincard extends Applet {
 		//copy head
 		Util.arrayCopy(temp, (short)0, progress, (short)0, (short)temp.length);
 		//copy tail
-		Util.arrayCopy(buffer, (short)(DATA+1), progress, (short)0, (short)(length-1));
+		Util.arrayCopy(buffer, (short)(DATA+1), progress, (short)temp.length, (short)(length-1));
 		
 		return new byte[]{0x01, 0x01, 0x01};
 	}
@@ -429,19 +429,19 @@ public class Traincard extends Applet {
 			return errorbytes;
 		
 		//calculate needed amount of apdus and the range which should returned
-		byte mod = (byte)(progress.length % (MAXRESPONSEDATALENGTH & 0xff));
+		short mod = (short)(progress.length % (MAXRESPONSEDATALENGTH & 0xff));
 		byte mod_ = (byte)((mod & 0xff) == 0 ? 0 : 1);
 		byte apduAmount = (byte)1;
-		if (progress.length-(mod & 0xff) > 0)//no division with zero
-			apduAmount = (byte)(((progress.length-(mod & 0xff))/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
+		if (progress.length-mod > 0)//no division with zero
+			apduAmount = (byte)(((progress.length-mod)/(MAXRESPONSEDATALENGTH & 0xff))+mod_);
 		
 		//create ret array which contains the part of the workoutplan
-		byte retLength = (byte)(MAXRESPONSEDATALENGTH & 0xff);
+		short retLength = (short)(MAXRESPONSEDATALENGTH & 0xff);
 		if (apduAmount == 1)
-			retLength = (byte)progress.length;
+			retLength = (short)progress.length;
 		else if (apduAmount == apduNumber)
 			retLength = mod;
-		retLength += (byte)3;	//for NoA, LEN und apduNumber
+		retLength += (short)3;	//for NoA, LEN und apduNumber
 		byte[] ret = JCSystem.makeTransientByteArray(retLength, JCSystem.CLEAR_ON_DESELECT );
 		
 		//copy the part
