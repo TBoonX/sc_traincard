@@ -4,8 +4,14 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,6 +22,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import main.Traingui;
+import model.MyDate;
 import model.Progress;
 import model.ProgressElement;
 import model.Set;
@@ -25,6 +32,7 @@ public class SportlerView extends JFrame {
 	private JScrollPane scrollPane;
 	private JButton backButton;
 	private JButton btnNewButton;
+	private JComboBox comboBoxDay;
 
 	public SportlerView() {
 		getContentPane().setLayout(null);
@@ -42,19 +50,12 @@ public class SportlerView extends JFrame {
 		table.setModel(new DefaultTableModel(new Object[][] {
 				{ null, "Bankdr\u00FCcken", "3", "", "30kg", "", "15-12-10",
 						"", Boolean.FALSE },
-				{ null, "Nackendr\u00FCcken", "3", "", "20kg", "", "15-12-10",
-						"", Boolean.FALSE },
-				{ null, "Latziehen", "3", "", "25kg", "", "15-12-10", "",
-						Boolean.FALSE },
-				{ null, "Rudern mit weitem Griff", "3", "", "25kg", "",
-						"15-12-10", "", Boolean.FALSE },
-				{ null, "Crosstrainer", "1", "", "-", "", "60min", "",
-						Boolean.FALSE }, }, new String[] { "Ger\u00E4t",
+				 }, new String[] { "Ger\u00E4t",
 				"Muskelgruppe", "S\u00E4tze", "heute", "Gewicht", "heute",
-				"Wiederholungen", "heute", "keine Abweichung" }) {
+				"Wiederholungen", "heute", "keine Abweichung", "Stage ID" }) {
 			Class[] columnTypes = new Class[] { Object.class, String.class,
 					String.class, String.class, String.class, String.class,
-					String.class, String.class, Boolean.class };
+					String.class, String.class, Boolean.class, Integer.class };
 
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -67,10 +68,21 @@ public class SportlerView extends JFrame {
 		table.getColumnModel().getColumn(6).setPreferredWidth(92);
 		table.getColumnModel().getColumn(7).setPreferredWidth(50);
 		table.getColumnModel().getColumn(8).setPreferredWidth(109);
+		table.getColumnModel().getColumn(9).setMinWidth(0);
+		table.getColumnModel().getColumn(9).setMaxWidth(0);
+		table.getColumnModel().getColumn(9).setWidth(0);
 		table.getTableHeader().setReorderingAllowed(false);
+
+		panel.setLayout(null);
+		table = new TableMethods().loadWorkoutplanTableSportler(table, 1);
 		table.getModel().addTableModelListener(new TableModelListener() {
 			@Override
-			public void tableChanged(TableModelEvent e) {
+			public void tableChanged(final TableModelEvent e) {
+				if (e.getColumn() < 8) {
+					return;
+				}
+				System.out.println(e.toString());
+				System.out.println();
 				if ((table.getValueAt(e.getFirstRow(), e.getColumn())
 						.equals(Boolean.TRUE))) {
 					for (int i = 1; i < 4; i++) {
@@ -83,7 +95,7 @@ public class SportlerView extends JFrame {
 				if ((table.getValueAt(e.getFirstRow(), e.getColumn())
 						.equals(Boolean.FALSE))) {
 					for (int i = 1; i < 4; i++) {
-						table.setValueAt("", e.getFirstRow(), i * 2);
+						table.setValueAt("", e.getFirstRow(), i + i + 1);
 					}
 
 				}
@@ -91,8 +103,6 @@ public class SportlerView extends JFrame {
 			}
 
 		});
-		panel.setLayout(null);
-		table.setValueAt("test", 0, 0);
 		scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(10, 43, 664, 228);
 		panel.add(scrollPane);
@@ -106,6 +116,24 @@ public class SportlerView extends JFrame {
 
 			}
 		});
+
+		comboBoxDay = new JComboBox();
+		String[] comboBoxString = new String[new TableMethods()
+				.getNumberOfDays()];
+		for (int i = 0; i < new TableMethods().getNumberOfDays(); i++) {
+			comboBoxString[i] = "" + (i + 1);
+		}
+		comboBoxDay.setModel(new DefaultComboBoxModel(comboBoxString));
+		comboBoxDay.setBounds(585, 269, 89, 43);
+		comboBoxDay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new TableMethods().loadWorkoutplanTableSportler(table,
+						Integer.valueOf((String) comboBoxDay.getSelectedItem()));
+			}
+		});
+
+		panel.add(comboBoxDay);
+
 		btnNewButton = new JButton("Trainingsdaten speichern");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -118,15 +146,24 @@ public class SportlerView extends JFrame {
 	}
 
 	private void saveProgress() {
-
-		Progress myProgress[] = getProgressArray();
-		if (myProgress == null) {
-			createNewProgress();
-			return;
-		}
+		
+		
+		
+		
+		
+		byte currStageID = 0;
+		Progress myProgress[] = Traingui.getTraingui().getMyProgress();
+		
 		int weightInt = 0, replicatesInt = 0;
 		byte[] newWeight = null, newReplicates = null;
 		for (int i = 0; i < table.getRowCount(); i++) {
+			byte StageID[] = ByteBuffer.allocate(4)
+					.putInt((int) table.getModel().getValueAt(i, 9)).array();
+//			myProgress[(int) table.getModel().getValueAt(i, 9)].getBest() == null
+			if (myProgress[(int)StageID[3]] == null) {
+				myProgress=createNewProgress(myProgress,StageID[3], i);
+				continue;
+			}
 			Set[] sets = new Set[(int) table.getValueAt(i, 2)];
 
 			for (int j = 0; j < sets.length; j++) {
@@ -134,8 +171,8 @@ public class SportlerView extends JFrame {
 				weightInt = 0;
 				replicatesInt = 0;
 
-				String replicatesText = (String) table.getValueAt(i, 5);
-				String weightText = (String) table.getValueAt(i, 4);
+				String replicatesText = (String) table.getValueAt(i, 7);
+				String weightText = (String) table.getValueAt(i, 5);
 				if (sets.length > 1) {
 					String[] weightNumbers = weightText.split("-");
 					String[] replicatesNumbers = replicatesText.split("-");
@@ -144,27 +181,41 @@ public class SportlerView extends JFrame {
 							+ Integer.valueOf(replicatesNumbers[j]);
 				} else {
 					weightInt = Integer
-							.valueOf((String) table.getValueAt(i, 4));
+							.valueOf((String) table.getValueAt(i, 5));
 					replicatesInt = Integer.valueOf((String) table.getValueAt(
-							i, 5));
+							i, 7));
 				}
-				newWeight = ByteBuffer.allocate(4).putInt(weightInt/sets.length).array();
-				newReplicates = ByteBuffer.allocate(4).putInt(replicatesInt/sets.length)
-						.array();
+				newWeight = ByteBuffer.allocate(4)
+						.putInt(weightInt / sets.length).array();
+				newReplicates = ByteBuffer.allocate(4)
+						.putInt(replicatesInt / sets.length).array();
 			}
+			Date today = new Date();
+			byte[] day = ByteBuffer.allocate(4).putInt(today.getDate()).array();
+			byte[] month = ByteBuffer.allocate(4).putInt(today.getMonth() +1).array();
+			byte[] year = ByteBuffer.allocate(4).putInt(today.getYear()-100).array();
 			ProgressElement currProgressElement = new ProgressElement(
-					newWeight[3], null);
+					newWeight[3], newReplicates[3], new MyDate(year[3], month[3], day[3]));
 
 			for (int k = 0; k < myProgress.length; k++) {
 				if (i == (int) myProgress[k].getStageID()) {
 					if (myProgress[k].getWorst().getWeight() > currProgressElement
 							.getWeight()) {
-						myProgress[k].setBest(currProgressElement);
+						myProgress[k].setWorst(currProgressElement);
 					}
 					if (myProgress[k].getBest().getWeight() < currProgressElement
 							.getWeight()) {
 						myProgress[k].setBest(currProgressElement);
 					}
+//					
+//					if ((myProgress[k].getWorst().getWeight() * myProgress[k].getWorst().getReplicates() ) >
+//					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+//						myProgress[k].setWorst(currProgressElement);
+//					}
+//					if ((myProgress[k].getBest().getWeight() * myProgress[k].getBest().getReplicates() ) >
+//					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+//						myProgress[k].setBest(currProgressElement);
+//					}
 					myProgress[k].setLast(currProgressElement);
 					break;
 				}
@@ -172,24 +223,23 @@ public class SportlerView extends JFrame {
 			}
 
 		}
-		setProgressArray(myProgress);
+		Traingui.getTraingui().setMyProgress(myProgress);
 	}
 
-	private void createNewProgress() {
+	private Progress[] createNewProgress(Progress myProgress[],byte stageID, int row) {
 		int weightInt = 0, replicatesInt = 0;
 		byte[] newWeight = null, newReplicates = null;
 
-		Progress myProgress[] = new Progress[table.getRowCount()];
-		for (int i = 0; i < table.getRowCount(); i++) {
-			Set[] sets = new Set[(int) table.getValueAt(i, 2)];
-
+		
+			Set[] sets = new Set[(int) table.getValueAt(row, 3)];
+			
 			for (int j = 0; j < sets.length; j++) {
 				byte[] number = ByteBuffer.allocate(4).putInt(j).array();
 				weightInt = 0;
 				replicatesInt = 0;
 
-				String replicatesText = (String) table.getValueAt(i, 5);
-				String weightText = (String) table.getValueAt(i, 4);
+				String replicatesText = (String) table.getValueAt(row, 7);
+				String weightText = (String) table.getValueAt(row, 5);
 				if (sets.length > 1) {
 					String[] weightNumbers = weightText.split("-");
 					String[] replicatesNumbers = replicatesText.split("-");
@@ -198,25 +248,27 @@ public class SportlerView extends JFrame {
 							+ Integer.valueOf(replicatesNumbers[j]);
 				} else {
 					weightInt = Integer
-							.valueOf((String) table.getValueAt(i, 4));
+							.valueOf((String) table.getValueAt(row, 5));
 					replicatesInt = Integer.valueOf((String) table.getValueAt(
-							i, 5));
+							row, 7));
 				}
-				newWeight = ByteBuffer.allocate(4).putInt(weightInt/sets.length).array();
-				newReplicates = ByteBuffer.allocate(4).putInt(replicatesInt/sets.length)
-						.array();
+				newWeight = ByteBuffer.allocate(4)
+						.putInt(weightInt / sets.length).array();
+				newReplicates = ByteBuffer.allocate(4)
+						.putInt(replicatesInt / sets.length).array();
 			}
+			Date today = new Date();
+			byte[] day = ByteBuffer.allocate(4).putInt(today.getDate()).array();
+			byte[] month = ByteBuffer.allocate(4).putInt(today.getMonth() +1).array();
+			byte[] year = ByteBuffer.allocate(4).putInt(today.getYear()-100).array();
+			
 			ProgressElement currProgressElement = new ProgressElement(
-					newWeight[3], null);
+					newWeight[3], newReplicates[3], new MyDate(year[3], month[3], day[3]));
+			myProgress[(int)stageID] = new Progress(stageID, currProgressElement,
+					currProgressElement, currProgressElement);
 
-			myProgress[i].setBest(currProgressElement);
-
-			myProgress[i].setBest(currProgressElement);
-
-			myProgress[i].setLast(currProgressElement);
-
-		}
-		setProgressArray(myProgress);
+		
+		return myProgress;
 	}
-	
+
 }

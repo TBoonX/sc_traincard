@@ -7,9 +7,9 @@ public class Workoutplan extends IModel {
 	private Stage[] warmupstage ;
 	private Stage[] trainingstage ;
 	private Stage[] cooldownstage;
-	private Date startdate;
-	private Date enddate;
-	public Workoutplan(Stage[] warmupstage, Stage[] trainingstage, Stage[] cooldownstage, Date startdate, Date enddate) {
+	private MyDate startdate;
+	private MyDate enddate;
+	public Workoutplan(Stage[] warmupstage, Stage[] trainingstage, Stage[] cooldownstage, MyDate startdate, MyDate enddate) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.warmupstage = warmupstage;
@@ -24,16 +24,16 @@ public class Workoutplan extends IModel {
 	public void setCooldownstage(Stage[] cooldownstage) {
 		this.cooldownstage = cooldownstage;
 	}
-	public Date getEnddate() {
+	public MyDate getEnddate() {
 		return enddate;
 	}
-	public void setEnddate(Date enddate) {
+	public void setEnddate(MyDate enddate) {
 		this.enddate = enddate;
 	}
-	public Date getStartdate() {
+	public MyDate getStartdate() {
 		return startdate;
 	}
-	public void setStartdate(Date startdate) {
+	public void setStartdate(MyDate startdate) {
 		this.startdate = startdate;
 	}
 	public Stage[] getTrainingstage() {
@@ -127,14 +127,14 @@ public class Workoutplan extends IModel {
 		datebytes[3] = bytes[6];
 		datebytes[4] = bytes[7];
 		datebytes[5] = bytes[8];
-		Date startdate = Date.fromBytes(datebytes);
+		MyDate startdate = MyDate.fromBytes(datebytes);
 		datebytes[0] = bytes[9];
 		datebytes[1] = bytes[10];
 		datebytes[2] = bytes[11];
 		datebytes[3] = bytes[12];
 		datebytes[4] = bytes[13];
 		datebytes[5] = bytes[14];
-		Date enddate = Date.fromBytes(datebytes);
+		MyDate enddate = MyDate.fromBytes(datebytes);
 		
 		short countWarmup = bytes[15];
 		short countTraining = bytes[16];
