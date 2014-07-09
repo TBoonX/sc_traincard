@@ -243,18 +243,37 @@ Als Antwort erhält das Lesegerät von der Smartcard ein so genanntes response A
 \section{Umsetzung}
 \label{sec:3}
 
+Dieses Kapitel legt die Umsetzung dar.
+
 \subsection{Systemumgebung}
 \label{subsec:3.1}
+
+%Aufteiung in off- und oncard
+%oncard ist applet auf emulierter smartcard, welche in der JCOP Eclipse Umgebung ausgeführt wird
+%Die Smartcard wird per $/close$ Befehl von der JCOP debug Konsole gelöst und ist über den Port 8090 erreichbar
+%der offcard teil ist ebenfalls in Java programmiert
+%sofern entsprechende firewall regeln erstellt wurden sind, kann sich der on -und offcard teil auf verschiedenen rechnern befinden
+%Der oncard muss ebenso wie der offcard teil einzeln gestartet werden, wonach beide Teile direkt miteinander kommunizieren
+%Der Inhalt der APDUs orientiert sich stark an der ISO Norm ISO7816. Der konkrete Aufbau ist in Abbildung apdu.png zusehen (NOA=Number of APDUs)
+
+%Die Modelklassen besitzen Funktionen zur umwandlung zwischen instanzen und byte Arrays zur Übertragung
+%diese umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von ethernet Packeten. Ein Packet besteht dabei immer aus einem byte für einen eindeutigen Identifikator, zwei bytes für die anzahl der data bytes sowie bytes für den dateninhalt
+
 Da für die Umsetzung des Belegs keine Experimentalhardware zur Verfügung steht, erfolgt die Implementierung mit Hilfe eines Simulators.
 
 \subsection{On-Card Teil}
 \label{subsec:3.2}
 Der On-Card Teil der Implementierung enthält sämtliche Trainingspläne und weitere Daten.
 
+%Der Oncard Teil ist mit der Klasse Traincard im Packet htwk.smartcard.traincard abgebildet. +klassendiagramm
+
+%das applet empfängt anfragen, wertet diese aus und sendet Daten oder ein erfolgsbyte im datenbereich zurück
+%Daten werden dabei immer als byte arrays geschrieben und gelesen
+
 \subsection{Off-Card Teil}
 \label{subsec:3.3}
 
-
+% der offcard Teil besteht aus der graphischen Oberfläche, der Logik zur Steuerung der Oberfäche und der Logik zur Kommunikation mit der Smartcard
 
 \clearpage
 \section{Zusammenfassung und Ausblick}
