@@ -288,7 +288,7 @@ public class CardInterface {
 		byte[] bytes = new byte[37*ps.length];
 		//copy elements
 		for (short i = 0; i < ps.length; i++) {
-			System.arraycopy(ps[i].toBytes(), 0, bytes, (i-1)*37, 37);
+			System.arraycopy(ps[i].toBytes(), 0, bytes, (i)*37, 37);
 		}
 		
 		//calculate needed amount of apdus and the range which should returned
