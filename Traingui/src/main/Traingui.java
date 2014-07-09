@@ -1,10 +1,9 @@
 package main;
-import java.util.HashMap;
-
 import gui.MainView;
 
 import javax.swing.JFrame;
 
+import model.Progress;
 import model.Workoutplan;
 
 public class Traingui {
@@ -12,6 +11,7 @@ public class Traingui {
 	private static Traingui myTraingui;
 	private JFrame myScreen;
 	private Workoutplan myPlan = null;
+	private Progress[] myProgress = null;
 	
 	
 	public static void main(String[] args) {
@@ -50,5 +50,13 @@ public class Traingui {
 	
 	public void setWorkoutplan(Workoutplan plan){
 		this.myPlan = plan;
+	}
+
+	public Progress[] getMyProgress() {
+		return myProgress;
+	}
+
+	public void setMyProgress(Progress[] myProgress) {
+		this.myProgress = myProgress;
 	}
 }
