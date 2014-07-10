@@ -651,7 +651,7 @@ public class TableMethods {
 		}
 		ProgressElement currElement;
 		for (int i = 0; i < myProgress.length; i++) {
-			if(myProgress[i] == null){
+			if(myProgress[i].getLast() == null){
 				continue;
 			}
 			myTable.setValueAt(myProgress[i].getBest().getWeight()+" x "+myProgress[i].getBest().getReplicates()+" ("+myProgress[i].getBest().getDate().getDay()

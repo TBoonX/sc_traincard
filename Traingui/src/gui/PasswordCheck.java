@@ -15,6 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import comm.CardInterface;
+
 import main.Traingui;
 
 public class PasswordCheck extends JFrame{
@@ -38,16 +40,17 @@ public class PasswordCheck extends JFrame{
 		btnLogin.setLocation(117, 260);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(checkPassword(passwordField.getText())){
+				if(CardInterface.login(passwordField.getText(), false)/*checkPassword(passwordField.getText())*/){
 					textInfo.setEnabled(false);
-					if(benutzer.equals(SPORTLER)){
-						
+//					if(benutzer.equals(SPORTLER)){
+//						
 						Traingui.getTraingui().setScreen(new SportlerView());
-					}
-					if(benutzer.equals(TRAINER)){
+//					}
+				}
+				if(CardInterface.login(passwordField.getText(), true)){
 						Traingui.getTraingui().setScreen(new TrainerView());
 					}
-				}
+				
 				else{
 					textInfo.setText("falsches Passwort");
 				}
