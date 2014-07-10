@@ -36,5 +36,20 @@ Die Statusrückgabe wird automatisch durch die JCOP Umgebung an die APDU angehan
 APDUs enthalten bis zu 256 Bytes, davon bis zu 252 Bytes für Daten.
 Es sind ganze Trainingspläne und andere Objekte im Byte Format zwischen On-Card und Off-Card Teil zu übertragen. Dazu existiert pro Datenmodell in der dazugehörigen Klasse je eine Funktion zur Umwandlung von Instanz zu Byte Array und zur Erzeugung einer Instanz aus einem Byte Array. Diese Umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von Ethernet Paketen. Ein Paket oder Byte Array besteht dabei immer aus einem Byte für einen eindeutigen Identifikator des Modells, zwei Bytes für die Anzahl der folgenden Bytes sowie Daten Bytes.
 Eine Instanz des Modells MyDate mit den Attributen Jahr\footnote{Bei einem Jahr werden nur die letzten zwei Ziffern hexadezimal abgespeichert.}, Monat und Tag wird in folgendes Byte Repräsentation umgewandelt: $01$ $00$ $03$ $0e$ $07$ $0b$
+\\
 
 %verschlüsselung
+Bei der Realisierung des Trainingssystemes werden keine Sicherheitsrelevanten Daten zwischen On-Card und Off-Card Teil übertragen. Auf Grund dessen wurde auf eine verschlüsselte Kommunikation mit asymmetrischer oder symmetrischer Verschlüsselung verzichtet.
+Einzig Rollen-spezifische Schreibvorgänge sind in beiden Card Teilen durch je ein Passwort geschützt.
+Der Trainer und der Sportler besitzen jeweils ein Passwort, welches mit der Java Bibliothek java.security.MessageDigest und derdarin enthaltenen  Hashfunktion SHA-256 zu einem 32 Byte langem Wert gehasht.
+Dieser Hash ist auf der Smartcard gespeichert und muss bei der Anmeldung zum anschließenden Vergleich des Trainers oder Sportlers übertragen werden.
+Der jeweilige Benutzer gibt in der grafischen Oberfläche sein Passwort im Klartext ein worauf die Programmlogik dieses hasht und es an die Smartcard überträgt.
+Initial ist die Karte mit je einem Hash für Trainer und Sportler zu füllen. Im Zuge der Vereinfachung sind diese Werte bereits statisch gefüllt.
+Um den Passworthash des Trainers zu setzen ist das in Listing \ref{•} dargestellte Kommando an die Smartcard zu senden.
+
+\begin{lstlisting}
+			\send 00 02 00 00 04 00 00 42 83 //Add Element with ID 00 00 42 83
+			Response:
+			Success: 90 00
+			Failure: 6A 83
+		\end{lstlisting}
