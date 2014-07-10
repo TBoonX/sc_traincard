@@ -1,7 +1,7 @@
 package htwk.smartcard.traincard.test;
 
 import static org.junit.Assert.*;
-import htwk.smartcard.traincard.model.Date;
+import htwk.smartcard.traincard.model.MyDate;
 import htwk.smartcard.traincard.model.ProgressElement;
 
 import org.junit.Before;
@@ -13,7 +13,7 @@ public class TestProgressElement {
 
 	@Before
 	public void setUp() throws Exception {
-		Date date = new Date((byte)0x0b, (byte)0x07, (byte)0x05);
+		MyDate date = new MyDate((byte)0x0b, (byte)0x07, (byte)0x05);
 		that = new ProgressElement((byte)0x24,(byte)0x0a, date);
 	}
 

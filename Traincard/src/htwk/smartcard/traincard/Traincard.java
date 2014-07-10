@@ -151,8 +151,8 @@ public class Traincard extends Applet {
 		Stage[] ss = new Stage[1];
 		ss[0] = stage2;
 		
-		Date now = new Date((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		Date othernow = new Date((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
+		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
+		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
 		
 		Workoutplan that = new Workoutplan(fs, allStages, ss, now, othernow);	//3+12+3+19+25+44 bytes
 		

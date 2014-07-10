@@ -1,14 +1,14 @@
 package htwk.smartcard.traincard.model;
 
 
-public class Date extends IModel {
+public class MyDate extends IModel {
 
 	public static final byte IDENTIFICATOR = 0x01;
 	
 	private byte year;
 	private byte month;
 	private byte day;
-	public Date(byte year, byte month, byte day) {
+	public MyDate(byte year, byte month, byte day) {
 		super();
 		// TODO Auto-generated constructor stub
 		this.year = year;
@@ -48,7 +48,7 @@ public class Date extends IModel {
 		
 		return ret;
 	}
-	public static Date fromBytes(byte[] bytes) {
+	public static MyDate fromBytes(byte[] bytes) {
 		if (IDENTIFICATOR != bytes[0])
 			return null;
 		
@@ -57,6 +57,6 @@ public class Date extends IModel {
 		if (length != 3)
 			return null;
 		
-		return new Date(bytes[3], bytes[4], bytes[5]);
+		return new MyDate(bytes[3], bytes[4], bytes[5]);
 	}
 }

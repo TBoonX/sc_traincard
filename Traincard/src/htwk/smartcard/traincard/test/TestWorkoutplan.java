@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import htwk.smartcard.traincard.model.Date;
+import htwk.smartcard.traincard.model.MyDate;
 import htwk.smartcard.traincard.model.Set;
 import htwk.smartcard.traincard.model.Stage;
 import htwk.smartcard.traincard.model.Workoutplan;
@@ -38,8 +38,8 @@ public class TestWorkoutplan {
 		Stage[] ss = new Stage[1];
 		ss[0] = stage2;
 		
-		Date now = new Date((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		Date othernow = new Date((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
+		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
+		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
 		
 		that = new Workoutplan(fs, allStages, ss, now, othernow);	//3+12+3+19+25+44 bytes
 	}
@@ -64,7 +64,7 @@ public class TestWorkoutplan {
 		datebytes[3] = bytes[12];
 		datebytes[4] = bytes[13];
 		datebytes[5] = bytes[14];
-		Date othernow = Date.fromBytes(datebytes);
+		MyDate othernow = MyDate.fromBytes(datebytes);
 		
 		assertEquals((byte)0x0e, othernow.getYear());
 		assertEquals((byte)0x08, othernow.getMonth());
