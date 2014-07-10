@@ -21,6 +21,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import comm.CardInterface;
+
 import main.Traingui;
 import model.MyDate;
 import model.Progress;
@@ -152,7 +154,8 @@ public class SportlerView extends JFrame {
 		
 		
 		byte currStageID = 0;
-		Progress myProgress[] = Traingui.getTraingui().getMyProgress();
+//		Progress myProgress[] = Traingui.getTraingui().getMyProgress();
+		Progress myProgress[] = CardInterface.getProgress();
 		
 		int weightInt = 0, replicatesInt = 0;
 		byte[] newWeight = null, newReplicates = null;
@@ -161,6 +164,7 @@ public class SportlerView extends JFrame {
 					.putInt((int) table.getModel().getValueAt(i, 9)).array();
 //			myProgress[(int) table.getModel().getValueAt(i, 9)].getBest() == null
 			if (myProgress[(int)StageID[3]] == null) {
+				System.out.println("neues Element");
 				myProgress=createNewProgress(myProgress,StageID[3], i);
 				continue;
 			}
@@ -198,24 +202,24 @@ public class SportlerView extends JFrame {
 					newWeight[3], newReplicates[3], new MyDate(year[3], month[3], day[3]));
 
 			for (int k = 0; k < myProgress.length; k++) {
-				if (i == (int) myProgress[k].getStageID()) {
-					if (myProgress[k].getWorst().getWeight() > currProgressElement
-							.getWeight()) {
-						myProgress[k].setWorst(currProgressElement);
-					}
-					if (myProgress[k].getBest().getWeight() < currProgressElement
-							.getWeight()) {
-						myProgress[k].setBest(currProgressElement);
-					}
-//					
-//					if ((myProgress[k].getWorst().getWeight() * myProgress[k].getWorst().getReplicates() ) >
-//					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+				if ((int)StageID[3] == (int)myProgress[k].getStageID()) {
+//					if (myProgress[k].getWorst().getWeight() > currProgressElement
+//							.getWeight()) {
 //						myProgress[k].setWorst(currProgressElement);
 //					}
-//					if ((myProgress[k].getBest().getWeight() * myProgress[k].getBest().getReplicates() ) >
-//					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+//					if (myProgress[k].getBest().getWeight() < currProgressElement
+//							.getWeight()) {
 //						myProgress[k].setBest(currProgressElement);
 //					}
+//					
+					if ((myProgress[k].getWorst().getWeight() * myProgress[k].getWorst().getReplicates() ) >
+					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+						myProgress[k].setWorst(currProgressElement);
+					}
+					if ((myProgress[k].getBest().getWeight() * myProgress[k].getBest().getReplicates() ) <
+					(currProgressElement.getWeight() * currProgressElement.getReplicates())) {
+						myProgress[k].setBest(currProgressElement);
+					}
 					myProgress[k].setLast(currProgressElement);
 					break;
 				}
@@ -223,7 +227,8 @@ public class SportlerView extends JFrame {
 			}
 
 		}
-		Traingui.getTraingui().setMyProgress(myProgress);
+		CardInterface.saveProgress(myProgress);
+//		Traingui.getTraingui().setMyProgress(myProgress);
 	}
 
 	private Progress[] createNewProgress(Progress myProgress[],byte stageID, int row) {
