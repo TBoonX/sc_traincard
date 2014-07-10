@@ -51,11 +51,20 @@ Die Kommunikation wird über ein so genanntes command APDU Paket initiiert, welc
 
 Weiterhin können je nach Kommandotyp noch die folgenden, optionalen Felder an das command APDU Paket angehängt werden:
 
-
 \begin{description}
 \item[Lc:] Length, gibt die Länge der Kommandodaten
 \item[Data:] gibt die Kommandodaten an
 \item[Le:] gibt die Länge der erwarteten Antwort an
 \end{description}
 
-Als Antwort erhält das Lesegerät von der Smartcard ein so genanntes response APDU Paket. Dieses Antwortpaket kann Daten enthalten, dies ist jedoch nicht obligatorisch. 
+Als Antwort erhält das Lesegerät von der Smartcard ein so genanntes response APDU Paket. Dieses Antwortpaket kann ein Datenfeld enthalten, dies ist jedoch nicht obligatorisch. Das response APU Paket ist wie folgt aufgebaut.
+
+\begin{description}
+\item[Data:] optionales Datenfeld
+\item[Sw1:] Statusword, erstes Byte
+\item[Sw2:] Statusword, zweites Byte
+\end{description}
+
+
+
+
