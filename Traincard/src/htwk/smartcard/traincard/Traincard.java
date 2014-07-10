@@ -30,8 +30,6 @@ public class Traincard extends Applet {
 	final byte REGISTER = (byte)0x05;
 	final byte LOGIN = (byte)0x06;
 	final byte LOGOUT = (byte)0x07;
-	final byte TEST = (byte)0x11;
-	final byte TEST2 = (byte)0x12;
 	
 	short ret_length = 0;
 	
@@ -100,22 +98,6 @@ public class Traincard extends Applet {
 			output = getProgress(buf);
 			ret_length = (short)(output.length+1);
 			break;
-		case TEST:
-			byte[] ret7 = null;
-			ret7 = test(buf);
-			override(buf, ret7);
-			
-			apdu.setOutgoingAndSend((short)0, (short)106);
-			
-            ISOException.throwIt(ISO7816.SW_NO_ERROR);
-			break;
-		case TEST2:
-			short l = 256;
-			byte[] big = new byte[l];
-			override(buf, big);
-			apdu.setOutgoingAndSend((short)0, l);
-			return;
-			//break;
 		
 		default:
 			// good practice: If you don't know the INStruction, say so:
@@ -129,34 +111,6 @@ public class Traincard extends Applet {
 	
 	private void override(byte[] buffer, byte[] data) {
 		Util.arrayCopy(data, (short)0, buffer, (short)0, (short)data.length);
-	}
-	
-	private byte[] test(byte[] buffer) {
-		Set[] sets = new Set[2];
-		sets[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		Stage stage1 = new Stage((byte)0x01, (byte)0x0f, sets, (byte)0x33, (byte)0x01);//19 byte
-		
-		Set[] sets2 = new Set[3];
-		sets2[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
-		sets2[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets2[2] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
-		Stage stage2 = new Stage((byte)0x01, (byte)0x10, sets2, (byte)0x2b, (byte)0x01);//25 bytes
-		
-		Stage[] allStages = new Stage[2];	//44 bytes
-		allStages[0] = stage1;
-		allStages[1] = stage2;
-		Stage[] fs = new Stage[1];
-		fs[0] = stage1;
-		Stage[] ss = new Stage[1];
-		ss[0] = stage2;
-		
-		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
-		
-		Workoutplan that = new Workoutplan(fs, allStages, ss, now, othernow);	//3+12+3+19+25+44 bytes
-		
-		return that.toBytes();
 	}
 	
 	/**
