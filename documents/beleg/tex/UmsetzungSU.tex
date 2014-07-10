@@ -45,11 +45,8 @@ Der Trainer und der Sportler besitzen jeweils ein Passwort, welches mit der Java
 Dieser Hash ist auf der Smartcard gespeichert und muss bei der Anmeldung zum anschließenden Vergleich des Trainers oder Sportlers übertragen werden.
 Der jeweilige Benutzer gibt in der grafischen Oberfläche sein Passwort im Klartext ein worauf die Programmlogik dieses hasht und es an die Smartcard überträgt.
 Initial ist die Karte mit je einem Hash für Trainer und Sportler zu füllen. Im Zuge der Vereinfachung sind diese Werte bereits statisch gefüllt.
-Um den Passworthash des Trainers zu setzen ist das in Listing \ref{•} dargestellte Kommando an die Smartcard zu senden.
+Um den Passworthash des Trainers zu setzen ist das in Listing \ref{lst:setpswds} dargestellte Kommando an die Smartcard zu senden.
 
-\begin{lstlisting}
-			\send 00 02 00 00 04 00 00 42 83 //Add Element with ID 00 00 42 83
-			Response:
-			Success: 90 00
-			Failure: 6A 83
-		\end{lstlisting}
+\begin{lstlisting}[language=java, captionpos=b, caption=Setzen des Passwortes eines Sportlers in Form eines Kommandos, label=lst:setpswds]
+/send 00 05 01 21 02 
+\end{lstlisting}
