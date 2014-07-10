@@ -10,6 +10,7 @@ import org.junit.Test;
 
 public class TestProgress {
 	Progress that;
+	Progress that2;
 
 	@Before
 	public void setUp() throws Exception {
@@ -19,6 +20,8 @@ public class TestProgress {
 		ProgressElement worst = new ProgressElement((byte)0x2f,(byte)0x08, date);
 		
 		that = new Progress((byte)0x01, last, best, worst);
+		
+		that2 = new Progress((byte)0x01, null, null, null);
 	}
 
 	@Test
@@ -28,6 +31,15 @@ public class TestProgress {
 		Progress newthat = Progress.fromBytes(bytes);
 		
 		assertEquals(that.getStageID(), newthat.getStageID());
+		
+		
+		byte[] bytes2 = that2.toBytes();
+		
+		Progress newthat2 = Progress.fromBytes(bytes2);
+		
+		assertEquals(that2.getStageID(), newthat2.getStageID());
+		assertEquals(that2.getLast(), newthat2.getLast());
+		
 	}
 
 }
