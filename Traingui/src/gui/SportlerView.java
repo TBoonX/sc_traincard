@@ -156,16 +156,18 @@ public class SportlerView extends JFrame {
 		byte currStageID = 0;
 //		Progress myProgress[] = Traingui.getTraingui().getMyProgress();
 		Progress myProgress[] = CardInterface.getProgress();
-		
+		if(myProgress == null){
+			return;
+		}
 		int weightInt = 0, replicatesInt = 0;
 		byte[] newWeight = null, newReplicates = null;
 		for (int i = 0; i < table.getRowCount(); i++) {
-			byte StageID[] = ByteBuffer.allocate(4)
+			byte stageID[] = ByteBuffer.allocate(4)
 					.putInt((int) table.getModel().getValueAt(i, 9)).array();
 //			myProgress[(int) table.getModel().getValueAt(i, 9)].getBest() == null
-			if (myProgress[(int)StageID[3]] == null) {
+			if (myProgress[(int)stageID[3]].getLast() == null) {
 				System.out.println("neues Element");
-				myProgress=createNewProgress(myProgress,StageID[3], i);
+				myProgress=createNewProgress(myProgress,stageID[3], i);
 				continue;
 			}
 			Set[] sets = new Set[(int) table.getValueAt(i, 2)];
@@ -202,7 +204,7 @@ public class SportlerView extends JFrame {
 					newWeight[3], newReplicates[3], new MyDate(year[3], month[3], day[3]));
 
 			for (int k = 0; k < myProgress.length; k++) {
-				if ((int)StageID[3] == (int)myProgress[k].getStageID()) {
+				if ((int)stageID[3] == (int)myProgress[k].getStageID()) {
 //					if (myProgress[k].getWorst().getWeight() > currProgressElement
 //							.getWeight()) {
 //						myProgress[k].setWorst(currProgressElement);

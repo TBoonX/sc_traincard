@@ -274,6 +274,8 @@ Die erfolgreiche Kommunikation zwischen On-Card und Off-Card auf verschiedenen R
 %Die Modelklassen besitzen Funktionen zur umwandlung zwischen instanzen und byte Arrays zur Übertragung
 %diese umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von ethernet Packeten. Ein Packet besteht dabei immer aus einem byte für einen eindeutigen Identifikator, zwei bytes für die anzahl der data bytes sowie bytes für den dateninhalt
 
+%verschlüsselung
+
 Da für die Umsetzung des Belegs keine Experimentalhardware zur Verfügung steht, erfolgt die Implementierung mit Hilfe eines Simulators.
 
 \subsection{On-Card Teil}
@@ -285,10 +287,15 @@ Der On-Card Teil der Implementierung enthält sämtliche Trainingspläne und wei
 %das applet empfängt anfragen, wertet diese aus und sendet Daten oder ein erfolgsbyte im datenbereich zurück
 %Daten werden dabei immer als byte arrays geschrieben und gelesen
 
+%passwörter sind gehashed abgelegt
+
 \subsection{Off-Card Teil}
 \label{subsec:3.3}
 
 % der offcard Teil besteht aus der graphischen Oberfläche, der Logik zur Steuerung der Oberfäche und der Logik zur Kommunikation mit der Smartcard
+%screenshots mit erklärungen was gemacht wird + grob technisches
+%passwörter werden gehashed
+%Packagediagramm
 
 \clearpage
 \section{Zusammenfassung und Ausblick}
@@ -301,6 +308,8 @@ Zusammenfassung und Ausblick ohne persönliche Meinung.
 \renewcommand\refname{Quellenverzeichnis}
 \begin{thebibliography}{999}
 
+\bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl   Vortragsfolien Modul Smartcard, HTWK-Leipzig, 2014}
+
 \bibitem{jcopdoc}Sun Microsystems, Inc.:  {\sl Java Card Applet Developer's Guide}\\
 \url{http://www.oracle.com/technetwork/java/javacard/downloads/index.html}\\
 abrufbar am 01.Juli 2014
@@ -311,8 +320,7 @@ kostenpflichtig abrufbar unter \url{http://www.iso.org/}
 \bibitem{label01}Autornachname, Autorvorname:  {\sl Buchtitel} Verlag, Erscheinungsjahr,
 \\ISBN:  978-0-07024-807-6
 
-\bibitem{dittler2002}Uwemann, Peter:  {\sl Train harder, 2. Auflage}. gpunkt-Verlag Heidelberg, 2012,
-\\ISBN: 133-7-13371-337-1
+
 
 
 \end{thebibliography}
