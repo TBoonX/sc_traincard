@@ -16,39 +16,8 @@ public class CardInterface {
 	
 	static final byte MAXRESPONSEDATALENGTH = (byte)0xfc;
 	
-	public static void main(String[] args) {
-		testP();
-	}
 	
-	private static void testWP() {
-		System.out.println("start writing workoutplan...");
-		
-		//create workoutplan
-		Workoutplan wp = createWPExtended();
-		
-		boolean success = saveWorkoutplan(wp);
-		
-		if (success) {
-			Workoutplan wp2 = getWorkoutplan();
-			
-			System.out.println("Workoutplan recived!");
-		}
-	}
 	
-	private static void testP() {
-		System.out.println("start writing progress...");
-		
-		//create workoutplan
-		Progress[] ps = createPs();
-		
-		boolean success = saveProgress(ps);
-		
-		if (success) {
-			Progress[] ps2 = getProgress();
-			
-			System.out.println("Progress recived!");
-		}
-	}
 	
 	private static Progress[] createPs() {
 		MyDate date = new MyDate((byte)0x0b, (byte)0x07, (byte)0x05);
@@ -220,7 +189,7 @@ public class CardInterface {
 			byte[] data = new byte[datalength];
 			System.arraycopy(bytes, (MAXRESPONSEDATALENGTH & 0xff)*(i-1), data, 0, datalength);
 			
-			System.out.println("!!! Send data: "+getHex(instructions)+getHex(data));
+			
 			
 			byte[] response = send(instructions, data);
 			
@@ -313,7 +282,7 @@ public class CardInterface {
 			byte[] data = new byte[datalength];
 			System.arraycopy(bytes, (MAXRESPONSEDATALENGTH & 0xff)*(i-1), data, 0, datalength);
 			
-			System.out.println("!!! Send data: "+getHex(instructions)+getHex(data));
+			
 			
 			byte[] response = send(instructions, data);
 			
@@ -414,20 +383,4 @@ public class CardInterface {
 	
 	
 	
-	///////////////////////////////////////////DEBUG
-	static final String HEXES = "0123456789ABCDEF";
-	  public static String getHex( byte [] raw ) {
-	    if ( raw == null ) {
-	      return null;
-	    }
-	    final StringBuilder hex = new StringBuilder( 2 * raw.length );
-	    for ( final byte b : raw ) {
-	      hex//.append("(byte)0x")
-	      	 .append(HEXES.charAt((b & 0xF0) >> 4))
-	         .append(HEXES.charAt((b & 0x0F)))
-	         //.append(", ")
-	         ;
-	    }
-	    return hex.toString();
-	  }
 }

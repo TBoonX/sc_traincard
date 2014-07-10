@@ -6,12 +6,13 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import main.Constants;
-import main.Traingui;
 import model.Progress;
 import model.ProgressElement;
 import model.Set;
 import model.Stage;
 import model.Workoutplan;
+
+import comm.CardInterface;
 
 public class TableMethods {
 
@@ -28,7 +29,8 @@ public class TableMethods {
 		clearTable(myTable);
 		DefaultTableModel model = (DefaultTableModel) myTable.getModel();
 
-		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+//		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+		Workoutplan myPlan = CardInterface.getWorkoutplan();
 		if (myPlan == null) {
 			return myTable;
 		}
@@ -184,7 +186,8 @@ public class TableMethods {
 		clearTable(myTable);
 		DefaultTableModel model = (DefaultTableModel) myTable.getModel();
 
-		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+//		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+		Workoutplan myPlan = CardInterface.getWorkoutplan();
 		if (myPlan == null) {
 			return myTable;
 		}
@@ -343,7 +346,8 @@ public class TableMethods {
 		clearTable(myTable);
 		DefaultTableModel model = (DefaultTableModel) myTable.getModel();
 
-		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+//		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+		Workoutplan myPlan = CardInterface.getWorkoutplan();
 		if (myPlan == null) {
 			return myTable;
 		}
@@ -524,8 +528,10 @@ public class TableMethods {
 		int stages = 0;
 		clearTable(myTable);
 		DefaultTableModel model = (DefaultTableModel) myTable.getModel();
-		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
-		Progress[] myProgress = Traingui.getTraingui().getMyProgress();
+//		Workoutplan myPlan = Traingui.getTraingui().getWorkoutplan();
+		Workoutplan myPlan = CardInterface.getWorkoutplan();
+//		Progress[] myProgress = Traingui.getTraingui().getMyProgress();
+		Progress[] myProgress = CardInterface.getProgress();
 		if (myPlan == null) {
 			return myTable;
 		}

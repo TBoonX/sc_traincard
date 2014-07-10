@@ -30,6 +30,8 @@ import model.Set;
 import model.Stage;
 import model.Workoutplan;
 
+import comm.CardInterface;
+
 public class TrainerView extends JFrame {
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -200,7 +202,13 @@ public class TrainerView extends JFrame {
 	}
 
 	private void saveWorkoutplan() {
-		Traingui.getTraingui().setMyProgress(new Progress[table.getRowCount()]);
+//		Traingui.getTraingui().setMyProgress(new Progress[table.getRowCount()]);
+		Progress[] myProgress = new Progress[table.getRowCount()];
+		for(int p=0; p< table.getRowCount();p++){
+			
+			myProgress[p]=new Progress((byte)(0xff & p), null, null, null);
+		}
+		System.out.println(CardInterface.saveProgress(myProgress));
 		// start date
 		byte[] bytesDay = ByteBuffer
 				.allocate(4)
@@ -309,9 +317,9 @@ public class TrainerView extends JFrame {
 
 			}
 		}
-
-		Traingui.getTraingui().setWorkoutplan(
-				new Workoutplan(warmup, train, cooldown, startDate, endDate));
+		System.out.println(CardInterface.saveWorkoutplan(new Workoutplan(warmup, train, cooldown, startDate, endDate)));
+//		Traingui.getTraingui().setWorkoutplan(
+//				new Workoutplan(warmup, train, cooldown, startDate, endDate));
 
 	}
 
