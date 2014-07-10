@@ -200,9 +200,12 @@ Eine Java Smartcard besteht im Wesentlichen aus den Bestandteilen Kommunikations
 Bei Verwendung der Smartcard wird diese in ein Lesegerät eingelegt. Das Lesegerät wird in einschlägiger Literatur auch als Card Acceptance Device, abgekürzt CAD, bezeichnet.
 Der Speicher auf Java Smartcards besteht aus zwei Typen, RAM und EEPROM. Der RAM-Speicher ist flüchtig und kann beliebig oft beschrieben werden. Der EEPROM-Speicher ist nichtflüchtig und kann nur endlich oft beschrieben werden, je nach Hersteller und Modell bis zu 100.000 mal pro Speicherzelle.  
 
-\subsection{JCOP}
+\subsection{Java Card Open Platform}
 \label{subsec:2.2}
-JCOP ist eine kontextorientierte Programmiererweiterung für die Programmiersprache Java und kombiniert COP-Vorteile mit neuen Konstrukten wie ereignisorientierten und deklarativen Layerkompositionen.
+Java Card Open Platform, abgekürzt JCOP, ist der Name für ein Smartcard Betriebssystem, welches initial von IBM entwickelt wurde, inzwischen aber von NXP Semiconductors betreut wird. 
+Es stehen sowohl reale JCOP-Karten zur Verfügung, wie auch simulierte JCOP-Karten.
+
+Da  
 
 \subsection{APDU}
 \label{subsec:2.3}
@@ -219,7 +222,6 @@ Die Kommunikation zwischen dem Kartenlesegerät und der Smartcard erfolgt reakti
 
 Die Kommunikation wird über ein so genanntes command APDU Paket initiiert, welches aus den folgenden Feldern besteht:
 
-
 \begin{description}
 \item[CLA:] class,gibt die Klasse an, spezifiziert ob es sich um ein ISO7816-4 konformes Kommando handelt
 \item[INS:] gibt die Instruktion an
@@ -229,7 +231,6 @@ Die Kommunikation wird über ein so genanntes command APDU Paket initiiert, welc
 
 Weiterhin können je nach Kommandotyp noch die folgenden, optionalen Felder an das command APDU Paket angehängt werden:
 
-
 \begin{description}
 \item[Lc:] Length, gibt die Länge der Kommandodaten
 \item[Data:] gibt die Kommandodaten an
@@ -237,7 +238,13 @@ Weiterhin können je nach Kommandotyp noch die folgenden, optionalen Felder an d
 \end{description}
 
 Als Antwort erhält das Lesegerät von der Smartcard ein so genanntes response APDU Paket. Dieses Antwortpaket kann Daten enthalten, dies ist jedoch nicht obligatorisch. 
+Der Aufbau eines response APDU ist wie folgt:
 
+\begin{description}
+\item[Data:] optionaler Datenbestandteil
+\item[Sw1:] Statusword, erstes Byte
+\item[Sw2:] Statusword, zweites byte
+\end{description}
 
 \clearpage
 \section{Umsetzung}
@@ -305,7 +312,9 @@ Zusammenfassung und Ausblick ohne persönliche Meinung.
 \renewcommand\refname{Quellenverzeichnis}
 \begin{thebibliography}{999}
 
-\bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl   Vortragsfolien Modul Smartcard, HTWK-Leipzig, 2014}
+\bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl   Lehrmaterial zum Modul Smartcard-Programmierung an der  HTWK-Leipzig im SS2014}\\
+\url{https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/437649412/CourseNode/87246817112798}\\
+intern abrufbar am 10.Juli 2014
 
 \bibitem{jcopdoc}Sun Microsystems, Inc.:  {\sl Java Card Applet Developer's Guide}\\
 \url{http://www.oracle.com/technetwork/java/javacard/downloads/index.html}\\
