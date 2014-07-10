@@ -4,103 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import model.MyDate;
 import model.Progress;
-import model.ProgressElement;
-import model.Set;
-import model.Stage;
 import model.Workoutplan;
 import opencard.core.terminal.CardTerminalException;
 
 public class CardInterface {
 	
 	static final byte MAXRESPONSEDATALENGTH = (byte)0xfc;
-	
-	
-	
-	
-	private static Progress[] createPs() {
-		MyDate date = new MyDate((byte)0x0b, (byte)0x07, (byte)0x05);
-		ProgressElement last = new ProgressElement((byte)0x24,(byte)0x0a, date);
-		ProgressElement best = new ProgressElement((byte)0x26,(byte)0x0a, date);
-		ProgressElement worst = new ProgressElement((byte)0x2f,(byte)0x08, date);
-		
-		Progress that1 = new Progress((byte)0x01, last, last, last);
-		Progress that2 = new Progress((byte)0x02, best, best, worst);
-		Progress that3 = new Progress((byte)0x03, worst, best, worst);
-		
-		return new Progress[]{that1, that2, that3};
-	}
-	
-	private static Workoutplan createWP() {
-		Set[] sets = new Set[2];
-		sets[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		Stage stage1 = new Stage((byte)0x01, (byte)0x0f, sets, (byte)0x33, (byte)0x01);//19 byte
-		
-		Set[] sets2 = new Set[3];
-		sets2[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
-		sets2[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets2[2] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
-		Stage stage2 = new Stage((byte)0x01, (byte)0x10, sets2, (byte)0x2b, (byte)0x01);//25 bytes
-		
-		Stage[] allStages = new Stage[2];	//44 bytes
-		allStages[0] = stage1;
-		allStages[1] = stage2;
-		Stage[] fs = new Stage[1];
-		fs[0] = stage1;
-		Stage[] ss = new Stage[1];
-		ss[0] = stage2;
-		
-		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
-		
-		Workoutplan ret = new Workoutplan(fs, allStages, ss, now, othernow);
-		
-		return ret;
-	}
-	
-	private static Workoutplan createWPExtended() {
-		Set[] sets = new Set[8];
-		sets[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets[2] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[3] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets[4] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[5] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets[6] = new Set((byte)0x01, (byte)0x1d, (byte)0x0f);
-		sets[7] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		Stage stage1 = new Stage((byte)0x01, (byte)0x0f, sets, (byte)0x33, (byte)0x01);//19 byte
-		
-		Set[] sets2 = new Set[9];
-		sets2[0] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
-		sets2[1] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets2[2] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
-		sets2[3] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
-		sets2[4] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets2[5] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
-		sets2[6] = new Set((byte)0x01, (byte)0x1d, (byte)0x0e);
-		sets2[7] = new Set((byte)0x02, (byte)0x28, (byte)0x08);
-		sets2[8] = new Set((byte)0x03, (byte)0x0a, (byte)0x0f);
-		Stage stage2 = new Stage((byte)0x01, (byte)0x10, sets2, (byte)0x2b, (byte)0x02);//25 bytes
-		
-		Stage stage3 = new Stage((byte)0x01, (byte)0x11, sets, (byte)0x2f, (byte)0x03);
-		Stage stage4 = new Stage((byte)0x01, (byte)0x12, sets, (byte)0x2e, (byte)0x04);
-		
-		Set warmupset = new Set((byte)0x01, (byte)0x00, (byte)0xff);
-		Set cooldownset = new Set((byte)0x01, (byte)0x00, (byte)0xaa);
-		
-		Stage warmupstage = new Stage((byte)0x01, (byte)0x01, new Set[]{warmupset, cooldownset}, (byte)0x00, (byte)0x05);
-		Stage cooldownstage = new Stage((byte)0x01, (byte)0x01, new Set[]{cooldownset, warmupset}, (byte)0x00, (byte)0x06);
-		
-		
-		MyDate now = new MyDate((byte)0x0e, (byte)0x07, (byte)0x03);	//6 bytes
-		MyDate othernow = new MyDate((byte)0x0e, (byte)0x08, (byte)0x01);//6 bytes
-		
-		Workoutplan ret = new Workoutplan(new Stage[]{warmupstage, stage1}, new Stage[]{stage1, stage2, warmupstage, stage3, cooldownstage, stage4}, new Stage[]{warmupstage, cooldownstage}, now, othernow);
-		
-		return ret;
-	}
 
 	public static boolean login(String password, boolean isTrainer) {
 		MessageDigest md;
@@ -254,10 +164,24 @@ public class CardInterface {
 	}
 	
 	public static boolean saveProgress(Progress[] ps) {
-		byte[] bytes = new byte[37*ps.length];
+		//count length of needed bytearray
+		short length = 0;
+		for (short k = 0; k < ps.length; k++) {
+			if (ps[k].getLast() == null)
+				length += 4;
+			else
+				length += 37;
+		}
+		
+		byte[] bytes = new byte[length];
 		//copy elements
+		short lastIndex = 0;
 		for (short i = 0; i < ps.length; i++) {
-			System.arraycopy(ps[i].toBytes(), 0, bytes, (i)*37, 37);
+			short pslength = 37;
+			if (ps[i].getLast() == null)
+				pslength = 4;
+			System.arraycopy(ps[i].toBytes(), 0, bytes, lastIndex, pslength);
+			lastIndex += pslength;
 		}
 		
 		//calculate needed amount of apdus and the range which should returned
@@ -341,13 +265,32 @@ public class CardInterface {
 			System.arraycopy(response, 3, pbytes, temp.length, dataLength-1);
 		}
 		
-		Progress[] ret = new Progress[pbytes.length/37];
+		Progress[] ret = new Progress[0];
+		Progress[] temp;
 		
 		try {
-			for (short i = 0; i < pbytes.length/37; i++) {
-				byte[] temp = new byte[37];
-				System.arraycopy(pbytes, (i)*37, temp, 0, 37);
-				ret[i] = Progress.fromBytes(temp);
+			short index = 0;
+			while (index < pbytes.length) {
+				byte id = pbytes[index];
+				short length = (short)((pbytes[index+1]<<8) | (pbytes[index+2]));
+				
+				byte[] bytes = new byte[37];
+				short copylength = 37;
+				if (length == 1) {
+					bytes = new byte[4];
+					copylength = 4;
+				}
+				System.arraycopy(pbytes, index, bytes, 0, copylength);
+				Progress newone = Progress.fromBytes(bytes);
+				
+				temp = ret;
+				ret = new Progress[temp.length+1];
+				for (short x = 0; x < temp.length; x++) {
+					ret[x] = temp[x];
+				}
+				ret[ret.length-1] = newone;
+				
+				index += copylength;
 			}
 		} catch (IndexOutOfBoundsException ioobe) {
 			ioobe.printStackTrace();
@@ -356,8 +299,6 @@ public class CardInterface {
 		
 		return ret;
 	}
-	
-	
 	
 	private static byte[] send(byte[] instructions, byte[] data) {
 		CardHandler that;
@@ -380,7 +321,4 @@ public class CardInterface {
 		
 		return ret;
 	}
-	
-	
-	
 }
