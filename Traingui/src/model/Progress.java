@@ -43,14 +43,20 @@ public class Progress extends IModel {
 
 	public byte[] toBytes(){
 		byte[] ret = new byte[37];
+		if (last == null)
+			ret = new byte[4];
 		
 		//ID
 		ret[0] = IDENTIFICATOR;
 		//length
 		ret[1] = 0x00;
-		ret[2] = 0x1f;
+		ret[2] = (byte)((last == null) ? 0x01 : 0x22);
 		//data
 		ret[3] = stageID;
+		
+		if (last == null)
+			return ret;
+		
 		byte[] pebytes = last.toBytes();
 		for (short j = 4; j < 15; j++) {
 			ret[j] = pebytes[j-4];
@@ -72,7 +78,11 @@ public class Progress extends IModel {
 		
 		short length = (short)((bytes[1]<<8) | (bytes[2]));
 		
-		if (length != 31)
+		if (length == 1) {
+			return new Progress(bytes[3], null, null, null);
+		}
+		
+		if (length != 34)
 			return null;
 		
 		byte[] pebytes = new byte[11];
