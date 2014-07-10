@@ -1,18 +1,30 @@
-\subsection{Systemumgebung}
-\label{subsec:3.1}
+\subsection{Kommunikation}
+\label{subsec:3.0}
 
-Die Anwendung besteht aus einem On-Card und einem Off-Card Teil.
+Die Anwendung besteht aus einem On-Card und einem Off-Card Teil.\\
 Entsprechend der JCOP Umgebung, ist der On-Card Teil durch ein Applet realisiert, welches auf der Smartcard installiert und gestartet wird.
 Diese Smartcard kann eine physische oder eine emulierte zum Einsatz kommen.
 Im Rahmen dieses Projektes wird die Smartcard per JCOP Eclipse Umgebung emuliert und verwendet.
-Dabei ist in der gestarteten JSOP Shell der Befehl $/close$ auszuführen, wodurch die Smartcard für externe  Zugriffe auf der lokalen IP des Emulator-Rechners auf dem Port 8090 erreichbar ist.
+Dabei ist in der gestarteten JCOP Shell der Befehl $/close$ auszuführen, wodurch die Smartcard für externe  Zugriffe auf der lokalen IP des Emulator-Rechners auf dem Port 8090 erreichbar ist.
 
 Der Off-Card Teil ist ebenfalls in Java geschrieben und kommuniziert mit Hilfe des OpenCard Frameworks mit der Smartcard.
 \\
 
 Die Kommunikation zwischen On-Card und Off-Card auf verschiedenen Rechnern benötigt entsprechende Regeln der Firewalls der Rechner, lokale Ausführung beider Teile auf einem Rechner hingegen keine.
 
-Der Inhalt der APDUs orientiert sich stark an der ISO Norm $ISO7816$. Der konkrete Aufbau ist in Abbildung \ref{myapdu} zusehen.
+Der Inhalt der APDUs orientiert sich stark an der Norm ISO 7816-4. Der konkrete Aufbau ist in Abbildung \ref{myapdu} dargestellt.\\
+Die Abkürzungen stehen dabei für folgendes:
+\begin{description}
+\item[CLA] ein Byte, welches immer mit dem Wert 0 belegt wird, da die APDU nicht vollständig ISO 7816-4 konform ist
+\item[INS] ein Byte, welches die Instruktion angibt
+\item[NOA] ein Byte, welches die Anzahl an gesamt zu übertragenden APDUs zur vollen Abarbeitung der Instruktion angibt
+\item[LEN] ein Byte, welches die Anzahl der folgenden Daten-Bytes aufzeigt
+\item[DATA] beliebige Anzahl von Bytes, welche die Daten enthalten\footnote{Anzahl der Daten-Bytes sollte LEN entsprechen}
+\item[SW1] ein Byte, welches den vorderen Teil der Statusrückgabe darstellt
+\item[SW2] ein Byte, welches den zweiten Teil der Statusrückgabe enthält
+\end{description}
+
+Die Statusrückgabe wird automatisch durch die JCOP Umgebung an die APDU angehangen. Die Interpretation der Statusrückgabe ist anhand ISO 7816-4 durchzuführen.
 
 \begin{figure}[htb]
 \begin{center}
@@ -21,9 +33,8 @@ Der Inhalt der APDUs orientiert sich stark an der ISO Norm $ISO7816$. Der konkre
 \caption[Selbstdefinierter Dateninhalt der APDUs]{\label{myapdu}Selbstdefinierter Dateninhalt der APDUs}
 \end{figure}
 
-%Der Inhalt der APDUs orientiert sich stark an der ISO Norm ISO7816. Der konkrete Aufbau ist in Abbildung apdu.png zusehen (NOA=Number of APDUs)
-
-%Die Modelklassen besitzen Funktionen zur umwandlung zwischen instanzen und byte Arrays zur Übertragung
-%diese umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von ethernet Packeten. Ein Packet besteht dabei immer aus einem byte für einen eindeutigen Identifikator, zwei bytes für die anzahl der data bytes sowie bytes für den dateninhalt
+APDUs enthalten bis zu 256 Bytes, davon bis zu 252 Bytes für Daten.
+Es sind ganze Trainingspläne und andere Objekte im Byte Format zwischen On-Card und Off-Card Teil zu übertragen. Dazu existiert pro Datenmodell in der dazugehörigen Klasse je eine Funktion zur Umwandlung von Instanz zu Byte Array und zur Erzeugung einer Instanz aus einem Byte Array. Diese Umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von Ethernet Paketen. Ein Paket oder Byte Array besteht dabei immer aus einem Byte für einen eindeutigen Identifikator des Modells, zwei Bytes für die Anzahl der folgenden Bytes sowie Daten Bytes.
+Eine Instanz des Modells MyDate mit den Attributen Jahr\footnote{Bei einem Jahr werden nur die letzten zwei Ziffern hexadezimal abgespeichert.}, Monat und Tag wird in folgendes Byte Repräsentation umgewandelt: $01$ $00$ $03$ $0e$ $07$ $0b$
 
 %verschlüsselung
