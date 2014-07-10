@@ -133,118 +133,12 @@ Michael Reher, B.Sc.\\
  
 \pagestyle{plain}
  
-\section{Einleitung}
-\label{sec:0}
-Diese Arbeit befasst sich mit der Vorstellung der Belegarbeit im Fach Smartcard Programmierung mit dem Thema ``Traincard''. 
-Ziel des Belegs ist die prototypische Implementierung eines Trainingssystems auf Basis JCOP-fähiger Smartcards. 
-\\
-\\
-Im ersten Kapitel \nameref{sec:1} wird der Use-Case für die prototypische Implementierung beschrieben, sowohl unter \nameref{subsec:1.1} aus Sicht des Trainierenden, wie auch unter \nameref{subsec:1.2} aus Sicht des Trainers.
-%In Kapitel \nameref{sec:2} wird die Protokollfamilie IPv6 vorgestellt. Welche Probleme gelöst werden, wenn anstelle von IPv4, IPv6 verwendet wird, wird im Kapitel \nameref{sec:3} erläutert. Im Kapitel \nameref{sec:4} wird anhand eines Praxisbeispiels erläutert wie sich IPv6-Konnektivität an einem Rechnersystem kofigurieren lässt. Abschließend erfolgt im Kapitel \nameref{sec:5} eine Zusammenfassung der Arbeit.
+\input{tex/Einleitung}
 
+\input{tex/Anwendungsfall}
 
-%%Auch wenn klar sein muss, dass es im Umfang eines solchen Beleges nicht ann\"ahrend abschlie{\ss}end m\"oglich ist das Thema IPv6 ersch\"opfend vorzustellen, so hofft der Autor dem geneigten Leser doch einen \"Uberblick \"uber die Funktionen und Vorteile von IPv6 bieten zu k\"onnen.
+\input{tex/Grundlagen}
 
-\clearpage
-\section{Anwendungsfall}
-\label{sec:1}
-In vielen Fitnessstudios werden heute noch bei der Neuanmeldung Trainingspläne auf Papier ausgegeben. Der Trainierende führt den Trainingsplan über die Trainingsperiode ständig bei sich und verzeichnet den Trainingsfortschritt in diesem Dokument.
-Im Verlauf der Trainingsperiode kann der Trainer beurteilen wie effektiv das Training beim Trainierenden ist.\\
-\\
-Die Verwendung altmodischer Trainingspläne auf Papier hat jedoch einige Nachteile. Beispielsweise wird das Dokument vom Trainierenden manchmal vergessen, die betreffenden Trainingsfortschritte müssen also nachgetragen werden. 
-Weiterhin sind Traingspläne in Papierform nicht besondern resistent gegen Abnutzung und verschleißen mit fortdauernder Verwendung. Um den genannten Nachteilen zu begegnen soll im Rahmen dieser Belegarbeit der Einsatz von Trainingsplänen
-auf Basis so genannter Smartcards abgebildet werden. Smartcards können sehr leicht in einer Brieftasche mitgeführt werden und sind weniger anfällig für Abnutzung. Weiterhin bieten sich viele weitere Vorteile wie ... (Datenlogging für das Studio, Kopieren bzw. 
-verteilter Zugriff auf die Daten ....) 
-
-
-\subsection{Anwendungsfall aus Sicht des Trainierenden}
-\label{subsec:1.1}
-
-Aus Sicht des Trainierenden bietet die Verwendung der Smartcard einige der folgenden Vorteile:
-\begin{itemize}
-\item leichte Transportierbarkeit
-\item robuster als Trainingspläne aus Papier
-\end{itemize}
-
-
-\subsection{Anwendungsfall aus Sicht des Trainers}
-\label{subsec:1.2}
-Trainer profitieren beim Einsatz von Smartcards unter anderem von folgenden Vorteilen:
-\begin{itemize}
-\item leichte und lesbare Auswertung der vorgegebenen Trainingspläne
-\item zusätzliche Metainformationen wie beispielsweise zu welchem Zeitpunkt welcher Datensatz geschrieben wurde
-\item statistische Auswertungen lassen sich sehr leicht erstellen 
-\end{itemize}
-
-\clearpage
-\section{Grundlagen}
-\label{sec:2}
-In diesem Kapitel wird auf die Grundlagen der in diesem Beleg verwendeten Technologien eingegangen.
-
-\subsection{Grundlagen Smartcard}
-\label{subsec:2.1}
-Die in diesem Beleg verwendete Smartcard basiert auf der Java Card Technologie. Die Java Card Technologie bietet eine 
-Teilmenge der Java Programmiersprache, sowie eine hinsichtlich der Anforderungen an Smartcards optimierte Laufzeitumgebung.
-
-Die Verwendung von Java-basierten Smartcards bietet einige Vorteile, von denen nachfolgend eine Auswahl beispielhaft genannt sei: \cite{jcopdoc}
-
-\begin{description}
-\item[plattformunabhängig:] Java Card Applets, die der Java Card API entsprechen, lassen sich plattformunabhängig und herstellerübergreifend nutzen.
-\item[Multiapplikationsfähig:] es können mehrere Applikationen gleichzeitig auf einer Smartcard ausgeführt werden
-\item[hohe Flexibilität:] die Verwendung der objektorientierten Programmiersprache Java erlaubt die Erstellung komplexer Anwendungen für die Smartcard.  
-\item[Post-Aktualisierbarkeit:] die Möglichkeit, nachträglich Code auf der Smartcard zu modifizieren und auszutauschen erhöht die Flexibilität weiter
-\item[Standardkonformität:] die Java Smartcards entsprechen dem ISO7816 Standard \cite{iso7816}
-\end{description}
-
-Eine Java Smartcard besteht im Wesentlichen aus den Bestandteilen Kommunikationsschnittstelle, Speicher und einem Prozessor zur Durchführung von Berechnungen.
-Bei Verwendung der Smartcard wird diese in ein Lesegerät eingelegt. Das Lesegerät wird in einschlägiger Literatur auch als Card Acceptance Device, abgekürzt CAD, bezeichnet.
-Der Speicher auf Java Smartcards besteht aus zwei Typen, RAM und EEPROM. Der RAM-Speicher ist flüchtig und kann beliebig oft beschrieben werden. Der EEPROM-Speicher ist nichtflüchtig und kann nur endlich oft beschrieben werden, je nach Hersteller und Modell bis zu 100.000 mal pro Speicherzelle.  
-
-\subsection{Java Card Open Platform}
-\label{subsec:2.2}
-Java Card Open Platform, abgekürzt JCOP, ist der Name für ein Smartcard Betriebssystem, welches initial von IBM entwickelt wurde, inzwischen aber von NXP Semiconductors betreut wird. 
-Es stehen sowohl reale JCOP-Karten zur Verfügung, wie auch simulierte JCOP-Karten.
-
-Da  
-
-\subsection{APDU}
-\label{subsec:2.3}
-
-Die Kommunikation zwischen dem Kartenlesegerät und der Smartcard erfolgt reaktiv und paketweise. Reaktiv bedeutet, dass die Smartcard keine Kommunikation initiiert sondern nur auf Anfragen vom Lesegerät reagiert. Der bei der Kommunikation zwischen Smartcard und Lesegerät verwendete Kommunikationsmechanismus wird als Application Protocol Data Units, abgekürzt APDU, bezeichnet. Spezifiziert ist dies ebenfalls in ISO7816 Teil 4.\cite{iso7816}
-\\
-
-\begin{figure}[htb]
-\begin{center}
- \includegraphics[width=1\hsize]{./images/apdu.png}
-\end{center}
-\caption[APDU-Kommunikation schematisch dargestellt, Quelle: Autoren]{\label{apdu}APDU-Kommunikation schematisch dargestellt, Quelle: Autoren}
-\end{figure}
-
-Die Kommunikation wird über ein so genanntes command APDU Paket initiiert, welches aus den folgenden Feldern besteht:
-
-\begin{description}
-\item[CLA:] class,gibt die Klasse an, spezifiziert ob es sich um ein ISO7816-4 konformes Kommando handelt
-\item[INS:] gibt die Instruktion an
-\item[P1:] zusätzlicher Parameter
-\item[P2:] zusätzlicher Parameter
-\end{description} 
-
-Weiterhin können je nach Kommandotyp noch die folgenden, optionalen Felder an das command APDU Paket angehängt werden:
-
-\begin{description}
-\item[Lc:] Length, gibt die Länge der Kommandodaten
-\item[Data:] gibt die Kommandodaten an
-\item[Le:] gibt die Länge der erwarteten Antwort an
-\end{description}
-
-Als Antwort erhält das Lesegerät von der Smartcard ein so genanntes response APDU Paket. Dieses Antwortpaket kann Daten enthalten, dies ist jedoch nicht obligatorisch. 
-Der Aufbau eines response APDU ist wie folgt:
-
-\begin{description}
-\item[Data:] optionaler Datenbestandteil
-\item[Sw1:] Statusword, erstes Byte
-\item[Sw2:] Statusword, zweites byte
-\end{description}
 
 \clearpage
 \section{Umsetzung}
@@ -252,59 +146,13 @@ Der Aufbau eines response APDU ist wie folgt:
 
 Dieses Kapitel legt die Umsetzung dar.
 
-\subsection{Systemumgebung}
-\label{subsec:3.1}
+\input{tex/UmsetzungSU}
 
-Die Anwendung besteht aus einem On-Card und einem Off-Card Teil.
-Entsprechend der JCOP Umgebung, ist der On-Card Teil durch ein Applet realisiert, welches auf der Smartcard installiert und gestartet wird.
-Diese Smartcard kann eine physische oder eine emulierte zum Einsatz kommen.
-Im Rahmen dieses Projektes wird die Smartcard per JCOP Eclipse Umgebung emuliert und verwendet.
-Dabei ist in der gestarteten JSOP Shell der Befehl $/close$ auszuführen, wodurch die Smartcard für externe  Zugriffe auf der lokalen IP des Emulator-Rechners auf dem Port 8090 erreichbar ist.
+\input{tex/UmsetzungOn}
 
-Der Off-Card Teil ist ebenfalls in Java geschrieben und kommuniziert mit Hilfe des OpenCard Frameworks mit der Smartcard.
-\\
+\input{tex/UmsetzungOff}
 
-Die Kommunikation zwischen On-Card und Off-Card auf verschiedenen Rechnern benötigt entsprechende Regeln der Firewalls der Rechner, lokale Ausführung beider Teile auf einem Rechner hingegen keine.
-
-Der Inhalt der APDUs orientiert sich stark an der ISO Norm $ISO7816$. Der konkrete Aufbau ist in Abbildung \ref{myapdu} zusehen.
-
-\begin{figure}[htb]
-\begin{center}
- \includegraphics[width=1\hsize]{./images/myapdu.png}
-\end{center}
-\caption[Selbstdefinierter Dateninhalt der APDUs]{\label{myapdu}Selbstdefinierter Dateninhalt der APDUs}
-\end{figure}
-
-%Der Inhalt der APDUs orientiert sich stark an der ISO Norm ISO7816. Der konkrete Aufbau ist in Abbildung apdu.png zusehen (NOA=Number of APDUs)
-
-%Die Modelklassen besitzen Funktionen zur umwandlung zwischen instanzen und byte Arrays zur Übertragung
-%diese umwandlung  wurde eigens implementiert und orientiert sich am Aufbau von ethernet Packeten. Ein Packet besteht dabei immer aus einem byte für einen eindeutigen Identifikator, zwei bytes für die anzahl der data bytes sowie bytes für den dateninhalt
-
-%verschlüsselung
-
-\subsection{On-Card Teil}
-\label{subsec:3.2}
-Der On-Card Teil der Implementierung enthält sämtliche Trainingspläne und weitere Daten.
-
-%Der Oncard Teil ist mit der Klasse Traincard im Packet htwk.smartcard.traincard abgebildet. +klassendiagramm
-
-%das applet empfängt anfragen, wertet diese aus und sendet Daten oder ein erfolgsbyte im datenbereich zurück
-%Daten werden dabei immer als byte arrays geschrieben und gelesen
-
-%passwörter sind gehashed abgelegt
-
-\subsection{Off-Card Teil}
-\label{subsec:3.3}
-
-% der offcard Teil besteht aus der graphischen Oberfläche, der Logik zur Steuerung der Oberfäche und der Logik zur Kommunikation mit der Smartcard
-%screenshots mit erklärungen was gemacht wird + grob technisches
-%passwörter werden gehashed
-%Packagediagramm
-
-\clearpage
-\section{Zusammenfassung und Ausblick}
-\label{sec:5}
-Zusammenfassung und Ausblick ohne persönliche Meinung.
+\input{tex/Zusammenf}
 
 \clearpage
 \section{Quellenverzeichnis}
@@ -312,9 +160,7 @@ Zusammenfassung und Ausblick ohne persönliche Meinung.
 \renewcommand\refname{Quellenverzeichnis}
 \begin{thebibliography}{999}
 
-\bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl   Lehrmaterial zum Modul Smartcard-Programmierung an der  HTWK-Leipzig im SS2014}\\
-\url{https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/437649412/CourseNode/87246817112798}\\
-intern abrufbar am 10.Juli 2014
+\bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl   Vortragsfolien Modul Smartcard, HTWK-Leipzig, 2014}
 
 \bibitem{jcopdoc}Sun Microsystems, Inc.:  {\sl Java Card Applet Developer's Guide}\\
 \url{http://www.oracle.com/technetwork/java/javacard/downloads/index.html}\\
