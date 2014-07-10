@@ -6,19 +6,19 @@ public class ProgressElement extends IModel {
 	
 	private byte weight;
 	private byte replicates;
-	private MyDate myDate;
+	private MyDate date;
 	
-	public ProgressElement(byte weight, byte replicates, MyDate myDate) {
+	public ProgressElement(byte weight, byte replicates, MyDate date) {
 		super();
 		this.weight = weight;
 		this.replicates = replicates;
-		this.myDate = myDate;
+		this.date = date;
 	}
 	public MyDate getDate() {
-		return myDate;
+		return date;
 	}
-	public void setDate(MyDate myDate) {
-		this.myDate = myDate;
+	public void setDate(MyDate date) {
+		this.date = date;
 	}
 	public byte getWeight() {
 		return weight;
@@ -45,7 +45,7 @@ public class ProgressElement extends IModel {
 		//data
 		ret[3] = weight;
 		ret[4] = replicates;
-		byte[] datebytes = myDate.toBytes();
+		byte[] datebytes = date.toBytes();
 		for (short j = 5; j < 11; j++) {
 			ret[j] = datebytes[j-5];
 		}
@@ -68,9 +68,9 @@ public class ProgressElement extends IModel {
 		datebytes[3] = bytes[8];
 		datebytes[4] = bytes[9];
 		datebytes[5] = bytes[10];
-		MyDate myDate = MyDate.fromBytes(datebytes);
+		MyDate date = MyDate.fromBytes(datebytes);
 		
-		return new ProgressElement(bytes[3], bytes[4], myDate);
+		return new ProgressElement(bytes[3], bytes[4], date);
 	}
 	
 }

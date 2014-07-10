@@ -35,3 +35,4 @@ hs_err_pid*
 *.cap
 *.exp
 *.props
+Traingui/.settings/org.eclipse.jdt.core.prefs
