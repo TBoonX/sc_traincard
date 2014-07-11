@@ -5,3 +5,21 @@
 %screenshots mit erklärungen was gemacht wird + grob technisches
 %passwörter werden gehashed
 %Packagediagramm
+
+Der Inhalt dieses Abschnittes bildet die Umsetzung des Off-Card-Teils. Dabei wird auf die graphische Oberfläche, die Logik zur Steuerung und zur Kommunikation mit der Smartcard eingegangen. \\
+\newline
+Wenn man die Off-Card-Anwendung startet, gelangt man in das Hauptmenü der Anwednung, welches in der Abbildung  dargestellt ist. Dieses Menü enthält fünf Buttons, welche jeweils zu einer Funktion des Programmes führt. Den gesamten Trainingsplan, den Tagesplan und den Trainingsfortschritt kann man sich ohne Eingabe eines Passwortes anschauen. Um die Trainingsergebnisse einzutragen oder den Trainingsplan zu ändern, ist ein Passwort nötig. Jeder der Funktionen, sowie die Passwortabfrage, wird im folgenden genauer erläutert.
+
+\subsubsection*{Trainingsplan}
+
+Über den Button Trainingsplan gelangt man in die nächste Ansicht, welche den gesamten aktuellen Trainingsplan darstellt, siehe Abbildung. Um den Trainingsplan zu laden, ruft das Programm die Funktion CardInterface.getWorkoutplan() aus dem CardInterface auf, welche als Rückgabewert den aktuellen Triningsplan liefert. Dieser wird im Anschluss ausgelesen und in die Tabelle geschrieben. Wenn der Trainingsplan leer ist, ist folglich auch die Tabelle leer. Über den Zurück Button gelangt man, wie auch in allen anderen Funktion, zurück in das Hauptmenü.
+
+\subsubsection*{Tagesplan}
+
+Die Ansicht des Tagesplan ist ähnlich zur Anzeige des gesamten Trainingsplans, mit einer Einschränkung. Über die Combobox Day kann der gewünschte tag ausgewählt werden. Nach dieser Auswahl wird in der Tabelle, welche den Trainingsplan anzeigt, nur diejenigen Übungen eingetragen und dargestellt, welche an dem jeweiligen Tag ,laut Trainingsplan, stattfinden sollen. Dazu besitzt jede Stage in einem Workoutplan-Object ein Attribut day. Diese Ansicht ist in Abbildung zu sehen.
+
+\subsubsection*{Trainingsfortschritt}
+
+\subsubsection*{Login: Sportler}
+
+\subsubsection*{Login: Trainer}
