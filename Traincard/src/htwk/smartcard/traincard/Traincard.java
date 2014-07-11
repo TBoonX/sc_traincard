@@ -34,7 +34,7 @@ public class Traincard extends Applet {
 	short ret_length = 0;
 	
 //	data
-//	sc14Trainer
+	//sc14Trainer
 	byte[] password_trainer = new byte[]{(byte)0x04, (byte)0xB6, (byte)0x3D, (byte)0xD6, (byte)0x08, (byte)0xE2, (byte)0x3F, (byte)0x05, (byte)0x2E, (byte)0xFF, (byte)0xC1, (byte)0x8C, (byte)0x8A, (byte)0x3B, (byte)0x10, (byte)0x97, (byte)0x8B, (byte)0xC3, (byte)0x5A, (byte)0x27, (byte)0x9D, (byte)0xDB, (byte)0x9A, (byte)0xF6, (byte)0x5F, (byte)0x54, (byte)0xBF, (byte)0x54, (byte)0xC3, (byte)0xB4, (byte)0x60, (byte)0x44};
 	//sc14Sportler
 	byte[] password_sportsman = new byte[]{(byte)0x5C, (byte)0xA1, (byte)0xA3, (byte)0x4A, (byte)0x74, (byte)0xF9, (byte)0xE1, (byte)0xCC, (byte)0xF4, (byte)0xEE, (byte)0x2E, (byte)0x09, (byte)0xA9, (byte)0x33, (byte)0xC8, (byte)0x20, (byte)0xB4, (byte)0xF7, (byte)0xF5, (byte)0x32, (byte)0xDC, (byte)0x99, (byte)0x01, (byte)0x19, (byte)0x18, (byte)0x6F, (byte)0x16, (byte)0xF2, (byte)0x03, (byte)0xDF, (byte)0x5D, (byte)0x6B};
@@ -114,15 +114,15 @@ public class Traincard extends Applet {
 	}
 	
 	/**
-	 * Register a trainer or sprtsman
+	 * Register a trainer or sportsman
 	 * 
 	 * data bytes should include kind byte and password bytes
 	 * example: /send 00 07 01 04 01 0a 0b 0c
 	 * 
 	 * returned bytes include kind byte and success byte
 	 * 
-	 * @param buffer
-	 * @return
+	 * @param buffer byte[]
+	 * @return byte[]
 	 */
 	private byte[] register(byte[] buffer) {
 		short length = (short)(buffer[LENGTH] & 0xff);
@@ -167,8 +167,9 @@ public class Traincard extends Applet {
 	 * 
 	 * returned bytes include kind byte and success byte
 	 * 
-	 * @param buffer
-	 * @return
+	 * @param buffer byte[]
+	 * @param login boolean
+	 * @return byte[]
 	 */
 	private byte[] login(byte[] buffer, boolean login) {
 		short length = (short)(buffer[LENGTH] & 0xff);
@@ -227,8 +228,8 @@ public class Traincard extends Applet {
 	 * example send:
 	 * /send 00 02 01 01 01
 	 * 
-	 * @param buffer
-	 * @return
+	 * @param buffer byte[]
+	 * @return byte[]
 	 */
 	private byte[] getWorkoutplan(byte[] buffer) {
 		byte apduNumber = buffer[DATA];
@@ -284,8 +285,9 @@ public class Traincard extends Applet {
 	 * 
 	 * example send:
 	 * /send 00 01 01 6b 010400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
-	 * @param buffer
-	 * @return
+	 * 
+	 * @param buffer byte[]
+	 * @return byte[]
 	 */
 	private byte[] saveWorkoutplan(byte[] buffer) {
 		byte countOfApdus = buffer[NOA]; 	//01
@@ -332,8 +334,9 @@ public class Traincard extends Applet {
 	 * 
 	 * example send:
 	 * /send 00 03 01 00 00
-	 * @param buffer
-	 * @return
+	 * 
+	 * @param buffer byte[]
+	 * @return byte[]
 	 */
 	private byte[] saveProgress(byte[] buffer) {
 		byte countOfApdus = buffer[NOA];
@@ -382,8 +385,8 @@ public class Traincard extends Applet {
 	 * example send:
 	 * /send 00 04 01 01 01
 	 * 
-	 * @param buffer
-	 * @return
+	 * @param buffer byte[]
+	 * @return byte[]
 	 */
 	private byte[] getProgress(byte[] buffer) {
 		byte apduNumber = buffer[DATA];
