@@ -71,7 +71,7 @@ Wenn nun ein Trainingsplan erzeugt und abgespeichert wurde, kann der Sportler se
 \newpage
 \subsubsection*{Trainingsfortschritt}
 
-Über die Funktion Trainingsfortschritt, kann wie es der Name sagt, sich den aktuellen Trainingsfortschritt anzeigen lassen. Dazu wird von der Karte der aktuelle Trainingsplan und das Progressarray abgerufen. Dabei gibt es verschiedene Möglichkeiten. Zum einen kann noch kein Trainingsplan existieren. Wenn dieser Fall vorliegt, bleibt die Tabelle leer und das Progressarray existiert folglich auch nicht und muss nicht ausgelesen werden. Wenn ein Trainingsplan existiert, allerdings noch keine Trainingsdaten eingetragen wurden, wird nur der Trainingsplan abgebildet und die Felder der Trainingsdaten bleiben leer, siehe Abb. \ref{empty}.
+In der Funktion Trainingsfortschritt wird der aktuelle Trainingsfortschritt angezeigt. Dazu wird von der Karte der aktuelle Trainingsplan und das Progressarray abgerufen. Dabei gibt es verschiedene Möglichkeiten. Zum einen kann noch kein Trainingsplan existieren. Wenn dieser Fall vorliegt, bleibt die Tabelle leer und das Progressarray existiert folglich nicht und muss nicht ausgelesen werden. Wenn ein Trainingsplan existiert, allerdings noch keine Trainingsdaten eingetragen wurden, wird nur der Trainingsplan abgebildet und die Felder der Trainingsdaten bleiben leer, siehe Abb. \ref{empty}.
 
 \begin{figure}[h]
 \includegraphics[width=1\hsize]{./images/fortschritt-leer.png}
@@ -91,11 +91,11 @@ Weiterhin exisitiert die Möglichkeit, das im Progressarray zu einigen Übungen 
 
 In diesem Abschnitt wird das Klassendiagram der Traingui beschrieben.\\
 \newline
-Die Traingui ist in die vier packages: model, main, gui und comm unterteilt. Im package main befindet sich der Programmstart, welche als erstes die MainView startet, um das Hauptmenü anzuzeigen. Von diesem aus, sind alle weiteren Funktionen erreichbar, welche in den vorrangegangen Abschnitten erläutert wurden. \\
+Die Traingui ist in die vier packages: model, main, gui und comm unterteilt. Im package main befindet sich die main Methode in der Klasse Traingui, welche als erstes die MainView startet, um das Hauptmenü anzuzeigen. Von diesem aus, sind alle weiteren Funktionen erreichbar, welche in den vorangegangen Abschnitten erläutert wurden.\\
 \newline
-Die MainView befindet sich im package gui, welche alle Views (MainView, SportlerView, FortschrittView, TagesplanView, TrainerView und TrainingsplanView) und die Programmlogik (TableMethods und PasswordCheck) enthält. Die Logik dient zum Auslesen und Schreiben der Worktoutplan und Progress Elementen, welche in de rKlasse TableMethods implementiert ist. Das Auslesen dient zum Befüllen der Tabellen. Vor dem schreiben neuer Elemente ist es notwendig, die Tabellen auszulesen und die entsprechenden Werte in das jeweilige Objekt zu übertragen. Die Zugriffsrechte auf die Smartcard werden auf Benutzerseite über die Klasse PasswortCheck geregelt, welche die eingegebenen Passwörter an die Smartcard überträgt und diese dann die Eingabe aus korrektheit überprüft. \\
+Die MainView befindet sich im package gui, welche alle Views (MainView, SportlerView, FortschrittView, TagesplanView, TrainerView und TrainingsplanView) und die Programmlogik (TableMethods und PasswordCheck) enthält. Die Logik dient zum Auslesen und Schreiben der Workoutplans und Progress Elementen, was in der Klasse TableMethods implementiert ist. Das Auslesen dient zum Befüllen der Tabellen. Vor dem schreiben neuer Elemente ist es notwendig, die Tabellen auszulesen und die entsprechenden Werte in das jeweilige Objekt zu übertragen. Die Zugriffsrechte auf die Smartcard werden auf Benutzerseite über die Klasse PasswortCheck geregelt, welche die eingegebenen Passwörter an die Smartcard überträgt und diese dann die Eingabe aus Korrektheit überprüft. \\
 \newline
-Jegliche Kommunikation der Traingui zur Smartcard, wird mit dem comm package realisiert. Dies beinhaltet dazu die Klassen CardInterface und CardHandler, welche alle benöttigten Funktionsaufrufe, zum lesen und schreiben von und auf die Karte, enthalten.\\
+Jegliche Kommunikation der Traingui zur Smartcard, wird mit dem package comm realisiert. Dies beinhaltet dazu die Klassen CardInterface und CardHandler, welche alle benötigten Funktionsaufrufe, zum lesen und schreiben von und auf die Karte, enthalten.\\
 \newline
 Der Aufbau der Datentypen ist im package model deklariert. Dieses enthält ein Interface IModel und die jeweiligen Klassen für den einzelnen Elemente: Workoutplan, Progress, ProgressElement, MyDate, Stage, und Set. Die Klasse MyDate wird benötigt, da die Karte kein Date-Objekt speichern kann und für das Ablegen von einem Datum eine Byte-Kodierung benötigt.
 
