@@ -17,7 +17,7 @@ Wenn man die Off-Card-Anwendung startet, gelangt man in das Hauptmenü der Anwen
 \label{main}
 \end{figure}
 
-
+\newpage
 
 \subsubsection*{Trainingsplan}
 
@@ -28,7 +28,7 @@ Wenn man die Off-Card-Anwendung startet, gelangt man in das Hauptmenü der Anwen
 \caption{gesamter Trainingsplan}
 \label{main}
 \end{figure}
-
+\newpage
 \subsubsection*{Tagesplan}
 
 Die Ansicht des Tagesplan ist ähnlich zur Anzeige des gesamten Trainingsplans, mit einer Einschränkung. Über die Combobox "'Tag"' kann der gewünschte Tag ausgewählt werden. Nach dieser Auswahl wird in der Tabelle, welche den Trainingsplan anzeigt, nur diejenigen Übungen eingetragen und dargestellt, welche an dem jeweiligen Tag ,laut Trainingsplan, stattfinden sollen. Dazu besitzt jede Stage in einem Workoutplan-Object ein Attribut day. Diese Ansicht ist in Abbildung \ref{day} zu sehen.
@@ -49,7 +49,7 @@ Um einen Trainingsplan mit den beiden Funktionen Trainingsplan und Tagesplan anz
 \label{login}
 \end{figure}
 \newpage
-Wenn man sien Passwort eingegeben hat und auf Login drückt, wird das Passwort gehashed und an die Smartcard mit dem Benutzertyp (Trainer oder Sportler) gesendet. Diese überprüft das Passwort auf Korrektheit und gibt als Antwort true oder false zurück. Wenn das Passwort korrekt ist, gelangt man in die Traineransicht und kann den aktuellen Trainingsplan verändern oder einen neuen anlegen. Die Ansicht ist in Abbildung \ref{trainer} dargestellt. Über den Button neue Übung können weitere Zeilen zur Tabelle hinzugefügt werden. Zusätzlich zu den Übungen kann ein Start und Enddatum für diesen Trainingsplan festgelegt werden. Da auf der Karte keine Strings gespeichert werden können, muss man mit ID's arbeiten. Diese ID's kann man dann im Off-Card-Teil über eine Hashmap speziellen Strings zuweisen um beispielsweise die Muskelgruppe nicht, wie in der Abb. \ref{trainer} zu sehen ist, als Zahl darstellen zu müssen. Beim speichern des Trainingsplans wird die Tabelle ausgelesen und die entsprechenden Werte einem neuen Workoutplan-Objekt zugewiesen, welches auf der Smartcard gespeichert wird. Zusätzlich dazu wird, auch ein neues Progressarray auf der Karte erzeugt, welche alle Stage-ID's für den neuen Plan enthält. Dies ist notwendig um den Fortschritt des Sportlers eintragen, speichern und auslesen zu können.
+Wenn man sein Passwort eingegeben hat und auf Login drückt, wird das Passwort gehashed und an die Smartcard mit dem Benutzertyp (Trainer oder Sportler) gesendet. Diese überprüft das Passwort auf Korrektheit und gibt als Antwort true oder false zurück. Wenn das Passwort korrekt ist, gelangt man in die Traineransicht und kann den aktuellen Trainingsplan verändern oder einen neuen anlegen. Die Ansicht ist in Abbildung \ref{trainer} dargestellt. Über den Button neue Übung können weitere Zeilen zur Tabelle hinzugefügt werden. Zusätzlich zu den Übungen kann ein Start und Enddatum für diesen Trainingsplan festgelegt werden. Da auf der Karte keine Strings gespeichert werden können, muss man mit ID's arbeiten. Diese ID's kann man dann im Off-Card-Teil über eine Hashmap speziellen Strings zuweisen um beispielsweise die Muskelgruppe nicht, wie in der Abb. \ref{trainer} zu sehen ist, als Zahl darstellen zu müssen. Beim speichern des Trainingsplans wird die Tabelle ausgelesen und die entsprechenden Werte einem neuen Workoutplan-Objekt zugewiesen, welches auf der Smartcard gespeichert wird. Zusätzlich dazu wird, auch ein neues Progressarray auf der Karte erzeugt, welche alle Stage-ID's für den neuen Plan enthält. Dies ist notwendig um den Fortschritt des Sportlers eintragen, speichern und auslesen zu können.
 
 \begin{figure}[h]
 \includegraphics[width=1\hsize]{./images/Trainer.png}
@@ -58,7 +58,7 @@ Wenn man sien Passwort eingegeben hat und auf Login drückt, wird das Passwort g
 \end{figure}
 
 
-
+\newpage
 \subsubsection*{Login: Sportler}
 
 Wenn nun ein Trainingsplan erzeugt und abgespeichert wurde, kann der Sportler seine Trainingsdaten bezüglich dieses Plans eintragen. Dazu ist es notwendig, das er sich als Sportler einloggt. Wenn der Benutzer als Sportler angemeldet ist, gelangt er in die Sportleransicht, welche in Abb. \ref{sportler} zu sehen ist. In dieser Ansicht werden alle Übungen, für den ausgewählten Tag, angezeigt. Die Auswahl geschieht nach dem gleichen Prinzip, welches auch in der Tagesplanansicht benutzt wird, siehe Abschnitt Tagesplan. Die Daten zu den jewieligen Übungen, kann der Nutzer manuell eingeben, oder die vorgegebenen Trainingswerte über die Checkbox übernehmen lassen. Wenn die Daten eingetragen sind und gespeichert werden (Button: Trainingsdaten speichern), wird das Progressarray aktualisiert. Dazu wird es zunächst von der Karte gelesen, dann Werte die eingetragenen Werte überprüft, ob gegebenenfalls ein neuer bester oder schlechtester Wert erreicht wurde. Nach der Aktualisierung wird das Progressarray wieder auf der Karte abgelegt. 
@@ -89,8 +89,15 @@ Weiterhin exisitiert die Möglichkeit, das im Progressarray zu einigen Übungen 
 \newpage
 \subsubsection*{Klassendiagramm Off-Card Teil}
 
-
-
+In diesem Abschnitt wird das Klassendiagram der Traingui beschrieben.\\
+\newline
+Die Traingui ist in die vier packages: model, main, gui und comm unterteilt. Im package main befindet sich der Programmstart, welche als erstes die MainView startet, um das Hauptmenü anzuzeigen. Von diesem aus, sind alle weiteren Funktionen erreichbar, welche in den vorrangegangen Abschnitten erläutert wurden. \\
+\newline
+Die MainView befindet sich im package gui, welche alle Views (MainView, SportlerView, FortschrittView, TagesplanView, TrainerView und TrainingsplanView) und die Programmlogik (TableMethods und PasswordCheck) enthält. Die Logik dient zum Auslesen und Schreiben der Worktoutplan und Progress Elementen, welche in de rKlasse TableMethods implementiert ist. Das Auslesen dient zum Befüllen der Tabellen. Vor dem schreiben neuer Elemente ist es notwendig, die Tabellen auszulesen und die entsprechenden Werte in das jeweilige Objekt zu übertragen. Die Zugriffsrechte auf die Smartcard werden auf Benutzerseite über die Klasse PasswortCheck geregelt, welche die eingegebenen Passwörter an die Smartcard überträgt und diese dann die Eingabe aus korrektheit überprüft. \\
+\newline
+Jegliche Kommunikation der Traingui zur Smartcard, wird mit dem comm package realisiert. Dies beinhaltet dazu die Klassen CardInterface und CardHandler, welche alle benöttigten Funktionsaufrufe, zum lesen und schreiben von und auf die Karte, enthalten.\\
+\newline
+Der Aufbau der Datentypen ist im package model deklariert. Dieses enthält ein Interface IModel und die jeweiligen Klassen für den einzelnen Elemente: Workoutplan, Progress, ProgressElement, MyDate, Stage, und Set. Die Klasse MyDate wird benötigt, da die Karte kein Date-Objekt speichern kann und für das Ablegen von einem Datum eine Byte-Kodierung benötigt.
 
 
 \begin{figure}[h]
