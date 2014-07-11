@@ -28,3 +28,11 @@ Das Instruktionsbyte wird mit den statischen Konstanten verglichen und anhand ei
 Der Aufbau der Command und Response APDU ist in der Abbildung \ref{myapdu} dargestellt.
 Die darin dargestellten Data Bytes sind entsprechend der jeweiligen Instruktion gefüllt.\\
 $00$ $02$ $01$ $01$ $01$ als APDU liest beispielsweise den Trainingsplan und sendet ihn zurück. Ist der Trainingsplan größer als MAXRESPONSEDATALENGTH Byte, muss mit $00$ $02$ $01$ $01$ $02$ eine weitere APDU mit den nächsten Bytes des Trainingsplanes angefordert werden.
+\\
+
+Lokale Byte Arrays der Methoden werden stets flüchtig mit der Methode makeTransientByteArray der Klasse javacard.framework.JCSystem angelegt.
+Der Vergleich und das Kopieren von Byte Arrays erfolgt mit den Methoden arrayCompare und arrayCopy der Klasse javacard.framework.Util.
+Dadurch wird der EEPROM der Smartcard nicht durch Schreibvorgänge belastet und die Ausführungszeit verringert sich.
+\\
+
+Der Trainingsplan und der Fortschritt wird in dynamischer Größe auf der Smartcard gespeichert und bei jedem Schreibvorgang neu erzeugt.
