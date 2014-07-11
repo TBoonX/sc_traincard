@@ -1,2 +1,47 @@
 \subsection{Datenstruktur}
 \label{subsec:3.1}
+Die Übersicht der Modellklassen ist in ??? zu sehen.
+\\
+
+Die Datenmodelle bilden die auf der Smartcard gespeicherten bzw. die vom Off-Card Teil verwendeten Datensätze wieder.
+Jede Modellklasse besitzt einen statischen Identifikator, einen Konstruktor, welcher alle Klassenvariablen setzt, und öffentliche lese- und Schreibmethoden der einzelnen Klassenvariablen.
+Weiterhin leitet jede Modellklasse von der abstrakten Klasse IModel ab, wodurch die Methoden toBytes und fromBytes überschrieben werden müssen und diese somit bei allen Klassen verfügbar sind.
+\\
+
+Jeder Trainingsplan, hier Workoutplan, besitzt die folgenden Attribute:
+\begin{itemize}
+\item Erwärmungsphase
+\item Trainingsphase
+\item Abkühlungsphase
+\item Startdatum
+\item Enddatum
+\end{itemize}
+Jede Phase ist dabei ein Menge von Übungen bzw. Stages.
+\\
+
+Eine Übung ist aus folgenden Attributen aufgebaut:
+\begin{itemize}
+\item Tagesnummer
+\item Geräteidentifikator
+\item Muskelgruppenidentifikator
+\item Übungsnummer
+\item Menge von Sätzen, hier Sets
+\end{itemize}
+Die Tagesnummer gibt an, welcher Trainingstag des wochenbezogenen Trainingsplanes die Übung zugeordnet ist.
+Da Zeichenketten nicht direkt auf der Smartcard gespeichert werden können, bzw. deren Byterepräsentation bei Beschreibungen die APDU Grenze von 256 Byte ohne Weiteres überschreiten können, werden zu Geräten und Muskelgruppen nicht deren Namen und Beschreibungen, sondern nur ein Identifikator gespeichert. Dieser Identifikator kann im Off-Card Teil zu einer Zeichenkette umgewandelt werden.
+\\
+
+Einzelne Sätze beinhalten die Satznummer, das zu verwendende Gewicht und die Anzahl der Wiederholungen mit dem Gewicht.
+\\
+
+Ein Datum wird durch die Klasse MyDate repräsentiert, welche je ein Byte für Jahr, Monat und Tag enthält.
+\\
+
+Die Fortschrittsdarstellung erhebt deren Daten aus einer Menge von Fortschrittselementen mit den folgenden Attributen:
+\begin{itemize}
+\item Übungsnummer
+\item letzter Übungswert
+\item bester Übungswert
+\item schlechtester Übungswert
+\end{itemize}
+Ein Übungswert enthält dabei das verwendete Gewicht, die durchgeführten Wiederholungen und den Tag an welchem die Übung mit dem Gewicht und den Wiederholungen durchgeführt wurde.
