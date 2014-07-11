@@ -182,9 +182,13 @@ Dieses Kapitel legt die Umsetzung dar.
 \clearpage
 \section{Quellenverzeichnis}
 \label{sec:6}
-\renewcommand\refname{Quellenverzeichnis}
-\begin{thebibliography}{999}
 
+%%empty command removes double title
+\renewcommand\refname{}
+%%%%
+
+
+\begin{thebibliography}{999}
 \bibitem{uwe}Prof. Dr. rer. nat. Petermann, Uwe: {\sl Lehrmaterial zur Veranstaltung Smartcard-Programmierung im SS2014 an der HTWK-Leipzig.}\\
 \url{https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/437649412/CourseNode/87246817112798}\\
 intern abrufbar am 10.Juli 2014
@@ -193,7 +197,8 @@ intern abrufbar am 10.Juli 2014
 \url{http://www.oracle.com/technetwork/java/javacard/downloads/index.html}\\
 abrufbar am 01.Juli 2014
 
-\bibitem{iso7816}International Organization for Standardization: {\sl ISO 7816 - Identification cards -- Integrated circuit cards}
+\bibitem{iso7816}International Organization for Standardization:\\
+{\sl ISO 7816 - Identification cards -- Integrated circuit cards}\\
 kostenpflichtig abrufbar unter \url{http://www.iso.org/}
 
 \end{thebibliography}
