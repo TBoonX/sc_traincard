@@ -114,10 +114,10 @@ public class Traincard extends Applet {
 	}
 	
 	/**
-	 * Register a person
+	 * Register a trainer or sprtsman
 	 * 
 	 * data bytes should include kind byte and password bytes
-	 * example: /send 80 07 01 04 01 0a 0b 0c
+	 * example: /send 00 07 01 04 01 0a 0b 0c
 	 * 
 	 * returned bytes include kind byte and success byte
 	 * 
@@ -163,7 +163,7 @@ public class Traincard extends Applet {
 	 * login or logout the given user with the given password
 	 * 
 	 * data bytes should include kind byte and password bytes
-	 * example: /send 80 08 01 04 01 0a 0b 0c
+	 * example: /send 00 08 01 04 01 0a 0b 0c
 	 * 
 	 * returned bytes include kind byte and success byte
 	 * 
@@ -225,7 +225,7 @@ public class Traincard extends Applet {
 	 * return count of all apdus, length of data, the current apdu number and the part of the workplan
 	 * 
 	 * example send:
-	 * /send 80 02 01 01 01
+	 * /send 00 02 01 01 01
 	 * 
 	 * @param buffer
 	 * @return
@@ -283,7 +283,7 @@ public class Traincard extends Applet {
 	 * 0400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
 	 * 
 	 * example send:
-	 * /send 80 01 01 6b 010400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
+	 * /send 00 01 01 6b 010400670100030E07030100030E0801010201030010010F3301020003011D0F020003022808030010010F3301020003011D0F02000302280803001601102B01020003011D0E020003022808020003030A0F03001601102B01020003011D0E020003022808020003030A0F
 	 * @param buffer
 	 * @return
 	 */
@@ -331,7 +331,7 @@ public class Traincard extends Applet {
 	 * return just the success byte
 	 * 
 	 * example send:
-	 * /send 80 03 01 00 00
+	 * /send 00 03 01 00 00
 	 * @param buffer
 	 * @return
 	 */
@@ -371,6 +371,20 @@ public class Traincard extends Applet {
 		return new byte[]{0x01, 0x01, 0x01};
 	}
 	
+	/**
+	 * get progress
+	 * sometimes more than one apdus neccessary
+	 * 
+	 * data bytes should include the needed number of apdu
+	 * 
+	 * return count of all apdus, length of data, the current apdu number and the part of the progress
+	 * 
+	 * example send:
+	 * /send 00 04 01 01 01
+	 * 
+	 * @param buffer
+	 * @return
+	 */
 	private byte[] getProgress(byte[] buffer) {
 		byte apduNumber = buffer[DATA];
 		

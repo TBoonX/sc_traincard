@@ -1,10 +1,30 @@
 \subsection{On-Card Teil}
 \label{subsec:3.2}
-Der On-Card Teil der Implementierung enthält sämtliche Trainingspläne und weitere Daten.
+Der On-Card Teil wird durch das Applet $Traincard$ repräsentiert.
+\\
 
-%Der Oncard Teil ist mit der Klasse Traincard im Packet htwk.smartcard.traincard abgebildet. +klassendiagramm
+
+Im Klassendiagramm in der Abbildung \ref{diaoncard} ist das Applet mit dessen Klassenvariablen und Methoden dargestellt.
+Das Applet befindet sich im Package\\htwk.smartcard.traincard und muss auf der verwendeten Smartcard installiert und gestartet werden.
+\\
+
+Entsprechend der Oberklasse javacard.framework.Applet, existieren Methoden, welche die Installation, Ausführung und Deselektion behandeln.
+Die wichtigste Methode ist dabei process, welche ankommende APDUs erhält, diese auswertet, die entsprechende Klassenmethode aufruft und deren Antwort-Bytes in Form einer Response APDU zurücksendet.
+
+\begin{figure}[htb]
+\begin{center}
+ \includegraphics[width=.7\hsize]{./images/Klassendiagramm_oncard.png}
+\end{center}
+\caption[Klassendiagramm On-Card Teil]{\label{diaoncard}Klassendiagramm On-Card Teil}
+\end{figure}
+
 
 %das applet empfängt anfragen, wertet diese aus und sendet Daten oder ein erfolgsbyte im datenbereich zurück
 %Daten werden dabei immer als byte arrays geschrieben und gelesen
 
 %passwörter sind gehashed abgelegt
+
+Das Instruktionsbyte wird mit den statischen Konstanten verglichen und anhand eines Treffers die entsprechende Methode aufgerufen. Jede dieser Methoden erhält den Puffer der APDU und gibt ein Byte Array für den Puffer der Response APDU zurück.
+Der Aufbau der Command und Response APDU ist in der Abbildung \ref{myapdu} dargestellt.
+Die darin dargestellten Data Bytes sind entsprechend der jeweiligen Instruktion gefüllt.\\
+$00$ $02$ $01$ $01$ $01$ als APDU liest beispielsweise den Trainingsplan und sendet ihn zurück. Ist der Trainingsplan größer als MAXRESPONSEDATALENGTH Byte, muss mit $00$ $02$ $01$ $01$ $02$ eine weitere APDU mit den nächsten Bytes des Trainingsplanes angefordert werden.
